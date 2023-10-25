@@ -35,6 +35,7 @@ function toggleInfo(id) {
 
   function enviar() {
      nombre = document.getElementById("name").value;
+     fecha_nacimiento = document.getElementById("fecha_nacimiento").value;
      dni = document.getElementById("dni").value;
      phone = document.getElementById("phone").value;
      email = document.getElementById("email").value;
@@ -43,12 +44,18 @@ function toggleInfo(id) {
      confirmarContrasena = document.getElementById("confirmar-contrasena").value;
      
     
-    if (nombre && dni && phone && email && message && contrasena && confirmarContrasena) {
+    if (nombre && fecha_nacimiento && dni && phone && email && message && contrasena && confirmarContrasena) {
       if (contrasena === confirmarContrasena) {
+
+        
+
+
+
         alert("¡Su mensaje fue recibido correctamente! A la brevedad nos pondremos en contacto.");
       
       // Limpiar el formulario
       document.getElementById("name").value = "";
+      document.getElementById("fecha_nacimiento").value = "";
       document.getElementById("dni").value = "";
       document.getElementById("phone").value = "";
       document.getElementById("email").value = "";
