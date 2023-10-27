@@ -32,38 +32,37 @@
   </header>
 
   <main>
-    <h2 class="titulo">¿Tenes alguna pregunta o comentario? ¡Contáctanos!</h2>
-    <div class="page-container">
-      <div class="form-container">
-        <form id="appointment-form" class="styled-form"method="POST" action="procesar_formulario.php">          
-          <div class="form-group">
-            <input type="text" id="name" name="name" placeholder="Nombre y Apellido: Juan Pérez" required>
-          </div>
-          <div class="form-group">
-            <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" placeholder="Fecha de Nac. : dd/mm/aaaa" required>
-          </div>          
-          <div class="form-group">
-            <input type="text" id="dni" name="dni" placeholder="DNI N°: 12345678" required>
-          </div>
-          <div class="form-group">
-            <input type="tel" id="phone" name="phone" placeholder="Telefono: (123) 456-7890" required>
-          </div>
-          <div class="form-group">
-            <input type="email" id="email" name="email" placeholder="Correo: ejemplo@correo.com" required>
-          </div>
-          <div class="form-group">
-            <input type="password" id="contrasena" name="contrasena" placeholder="Ingresar Contraseña" required>
-          </div>
-          <div class="form-group">
-            <input type="password" id="confirmar-contrasena" name="confirmar-contrasena" placeholder="Confirmar Contraseña" required>
-          </div>  
-          <div class="form-group">
-            <textarea id="message" name="message" rows="4" placeholder=" ¡Detalla en el cuerpo de este Mensaje tu solicitud e inquietud!. A la brevedad nos pondremos en contacto." required></textarea>
-          </div> 
-          <button type="button" class="submit-button" onclick="enviar()">Enviar</button>       
-            <img src="/imagenes/envio.png" alt="">
-        </form>
-    </div>
+    <h2 class="titulo">Formulario de registro</h2>
+    <form class="form-formulario" id="registration-form">        
+      <label class="label-formulario" for="nombre">Nombre/s:</label>
+      <input class="input-formulario" type="text" id="nombre" required placeholder="Ingrese su nombre/s...">
+      <label class="label-formulario" for="apellido">Apellido/s:</label>
+      <input class="input-formulario" type="text" id="apellido" required placeholder="Ingrese su apellido/s...">
+      <label class="label-formulario" for="dni">DNI:</label>
+      <input class="input-formulario" type="text" id="DNI" required placeholder="Ingrese su DNI...">
+      <label class="label-formulario" for="direccion">Dirección:</label>
+      <input class="input-formulario" type="text" id="direccion" required placeholder="Ingrese su dirección...">
+      <label class="label-formulario" for="numero">Número:</label>
+      <input class="input-formulario" type="text" id="numero" required placeholder="Ingrese el número...">
+      <label class="label-formulario" for="codigo-postal">Código Postal:</label>
+      <input class="input-formulario" type="text" id="codigo-postal" required placeholder="Ingrese el código postal...">
+      <label class="label-formulario" for="telefono">Teléfono:</label>
+      <input class="input-formulario" type="text" id="telefono" required placeholder="Ingrese su teléfono...">
+      <label class="label-formulario" for="email">Email:</label>
+      <input class="input-formulario" type="text" id="email" required placeholder="Ingrese su mail...">
+      <label class="label-formulario" for="confirmar-email">Confirmar Email:</label>
+      <input class="input-formulario" type="text" id="confirmar-email" required placeholder="Confirmar su Email...">
+      <label class="label-formulario" for="contrasena">Contraseña:</label>
+      <input class="input-formulario" type="password" id="contrasena" required placeholder="Ingrese su contraseña...">
+      <label class="label-formulario" for="confirmar-contrasena">Confirmar Contraseña:</label>
+      <input class="input-formulario" type="password" id="confirmar-contrasena" required placeholder="Confirmar su contraseña">
+      <label class="label-formulario" for="textarea">¡Tu consulta o sugerencia nos interesa!:</label>
+      <input class="input-formulario" id="textarea" rows="4" placeholder="¡¿Tienes alguna inquietud o comentario?!" required></textarea>
+      <button class="button-formulario" id="enviarButton" type="submit">Enviar</button>
+    </form>
+    <img src="/imagenes/envio.png" alt="">
+  </main>
+
     <section class="clientes contenedor">
       <h2 class="titulo">¡Te esperamos!</h2>
       <div class="cards">
@@ -114,9 +113,7 @@
       <p>Desarrollo Web</p>
 
     </footer>
-  </main>
-  
-  <script src="/js/script.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 </html>
 

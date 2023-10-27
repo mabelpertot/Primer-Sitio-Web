@@ -105,7 +105,7 @@ main .sobre-nosotros{
   height: 30px;
   padding: 2px;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, .5);
-  margin-right: 5px;
+  margin-right: 5px; 
 }
 .contenido-textos p{
   padding: 0px 0px 30px 15px;
@@ -369,63 +369,61 @@ iframe {
 
 /***********ESTILO PARA EL FORMULARIO***********/
 
-.form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.form-container form {
-  max-width: 800px;
-  padding: 40px;
-  background-color: #e0c8c869;
-  border: 1px solid #686666;
-  border-radius: 30px 30px 30px 30px;
-}
-
-
-input[type="text"],
-input[type="date"],
-input[type="tel"],
-input[type="email"],
-input[type="password"],
-textarea {
-  width: 100%;
-  height: 40px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-left: #546d8d 5px solid;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  
-}
-.submit-button {
-  display: block;
-  width: 100%;
-  height: 50px;
-  padding: 10px;
-  background-color: #d8cad5ab;
-  color: rgb(155, 145, 145);
-  padding: 10px 20px;
-  border-left: #546d8d 5px solid;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; 
-}
-.submit-button:hover {
-  background-color: #c2cedb; 
-}
-input select {
-  width: 100%;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border: 1px solid #cfb0d1;
+.form-formulario {
+  background: -webkit-linear-gradient(to right, hsla(252, 23%, 50%, 0.459), hsla(298, 28%, 79%, 0.664));
+  background: linear-gradient(to right, hsla(252, 23%, 50%, 0.459), hsla(298, 28%, 79%, 0.664));
+  width: 60%;
+  margin: 0 auto;
+  background-color: #f3f3f3;
+  padding: 20px;
   border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
-.styled-form button.submit-button:hover {
-  background-color: #d4bedb;
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center; 
+  margin-bottom: 10px;
 }
-
+.label-formulario {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.input-formulario {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.button-formulario {
+  background-color: #b582dc;
+  color: #fff;
+  padding: 20px 30px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.button-formulario:hover {
+  background-color: #a879ab;
+}
+.confirmation-message {
+  border: 1px solid #baa2a2;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 15px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.user-options {
+  display: none;
+  padding: 10px;
+  background-color: #4e4a4aa1;
+  border: 1px solid #655858;
+  margin-top: 40px;
+  border-radius: 5px;
+}
 .confirmation-message {
   border: 1px solid #baa2a2;
   border-radius: 10px;
@@ -500,35 +498,15 @@ input select {
   .servicio-ind img{
       width: 100%;
   }
-  .form-container {
+
+  .form-formulario {
     padding: 10px;
-    width: 100;
-  }
-
-  .form-container form {
-    max-width: 100%;
-  }
-
-/* Formulario */
-
-  .form-container form {
+    width: 100%;
     max-width: 100%;
     padding: 10px;
-
   }
-
   .form-group {
     margin-bottom: 8px;
-  }
-
-  }
-  input[type="text"],
-  input[type="tel"],
-  input[type="email"],
-  textarea {
-    padding: 5px;
-    font-size: 14px; 
- 
   }
 
   .submit-button {
@@ -624,4 +602,4 @@ input select {
 }
 
 
-
+}
