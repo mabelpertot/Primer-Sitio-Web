@@ -42,26 +42,16 @@
     }
   });
 
+  document.getElementById("leer-mas-button").addEventListener("click", function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    var informacionAdicional = document.getElementById("informacion-adicional");
+    if (informacionAdicional.style.display === "none" || informacionAdicional.style.display === "") {
+        informacionAdicional.style.display = "block";
+    } else {
+        informacionAdicional.style.display = "none";
+    }
+});
 
-  const buttons = document.querySelectorAll('.leer-mas');
-
-  // Agrega un controlador de eventos a cada botón
-  buttons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Obtiene el identificador del contenido adicional a mostrar/ocultar
-      const targetId = button.getAttribute('data-target');
-      const contenidoAdicional = document.getElementById(targetId);
-
-      // Alterna la visibilidad del contenido adicional al hacer clic en el botón
-      if (contenidoAdicional.style.display === 'none' || contenidoAdicional.style.display === '') {
-        contenidoAdicional.style.display = 'block';
-        button.textContent = 'Leer Menos';
-      } else {
-        contenidoAdicional.style.display = 'none';
-        button.textContent = 'Leer Más';
-      }
-    });
-  });
 
 
 
