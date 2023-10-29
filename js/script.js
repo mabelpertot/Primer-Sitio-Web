@@ -42,24 +42,29 @@
     }
   });
 
-  function toggleInfo(id) {
-    info = document.getElementById(id);
-   if (info.style.display === "none" || info.style.display === "") {
-     info.style.display = "block"; // Mostrar la información adicional
-   } else {
-     info.style.display = "none"; // Ocultar la información adicional
-   }
- }
- 
-     // Mostrar u ocultar la información adicional al hacer clic en el botón.
-     function toggleInfo(infoId) {
-        info = document.getElementById(infoId);
-       if (info.style.display === "none") {
-         info.style.display = "block";
-       } else {
-         info.style.display = "none";
-       }
-     }
+
+  const buttons = document.querySelectorAll('.leer-mas');
+
+  // Agrega un controlador de eventos a cada botón
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Obtiene el identificador del contenido adicional a mostrar/ocultar
+      const targetId = button.getAttribute('data-target');
+      const contenidoAdicional = document.getElementById(targetId);
+
+      // Alterna la visibilidad del contenido adicional al hacer clic en el botón
+      if (contenidoAdicional.style.display === 'none' || contenidoAdicional.style.display === '') {
+        contenidoAdicional.style.display = 'block';
+        button.textContent = 'Leer Menos';
+      } else {
+        contenidoAdicional.style.display = 'none';
+        button.textContent = 'Leer Más';
+      }
+    });
+  });
+
+
+
  
   
 
