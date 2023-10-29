@@ -96,7 +96,7 @@ header .textos-header{
   color: #7a7a7a;
   }
   .tarjeta{
-  flex: 20%;
+  flex: 1;
   width: calc(40% - 10px);;
   margin-bottom: 20px;
   border-radius: 6px;
@@ -107,7 +107,7 @@ header .textos-header{
   background:#fff;
   box-shadow: 0px 1px 10px rgba(0,0,0,0.2);
   transition: all 400ms ease-out;
-  cursor: default;
+  cursor: pointer;
   }
   .tarjeta:hover{
   box-shadow: 5px 5px 20px rgba(0,0,0,0.4);
@@ -115,7 +115,7 @@ header .textos-header{
   }
   .tarjeta img{
   width: 100%;
-  height: 210px;
+  height: auto;
   }
   .tarjeta .contenido-tarjeta{
   padding: 15px;
@@ -148,14 +148,14 @@ header .textos-header{
   }
 
 /********** PAGE SERVICIOS ***********/
-
+/*general*/
 .container-tarj{
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 100px 50px;
+  gap: 50px;
   padding: 100px 50px;
 }
 .container-tarj .card-tarj{
@@ -169,6 +169,7 @@ header .textos-header{
   border-radius: 20px;
   box-shadow: 0px 35px 80px rgba(0, 0, 0, 0.15);
   transition: 0.5s;
+  margin: 10px;
 }
 .container-tarj .card-tarj:hover{
   height: 400px;
@@ -185,7 +186,7 @@ header .textos-header{
 }
 .container-tarj .card-tarj:hover .imgBx{
   top: -100px;
-  scale: 0.75;
+  transform: scale(0.75); 
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
 }
 .container-tarj .card-tarj .content-tarj{
@@ -206,6 +207,7 @@ header .textos-header{
   font-size: 1.5em;
   font-weight: 700;
   color: var(--clr);
+  margin-bottom: 10px;
 }
 .container-tarj .card-tarj .content-tarj p{
   color: #0a0a0a;
@@ -276,6 +278,7 @@ header .textos-header{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    align-items: center;
 }
 .card__father{
     margin: 20px;
@@ -540,7 +543,7 @@ footer{
 
 
 /*********** RESPONSIVE ***********/
-
+/* Media queries*/
 @media screen and (max-width:768px){
 
   .titulo {
@@ -550,24 +553,81 @@ footer{
     background-position: center;
   }
   
-    /* Galeria */
+    /* epecialidades-galeria */
 
   .imagen-port{
     width: 50%;
   }
 
-  /* Clientes */
+  /* contacto-tarjetas clientes */
   .cards {
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
-  .cards .card {
+  .cards .card .tarjeta{
     width: 100%;
   }
   .cards .card:first-child{
     margin-bottom: 30px;
   }
+  /*main-tarjetas valores*/
+  .container-tarjeta {
+    flex-direction: column; 
+    align-items: center;
+    padding: 20px; 
+  }
+  .tarjeta {
+    flex: 1; 
+    width: 100%;
+  }
+
+  .container-tarj {
+    width: 100%; 
+    margin: 10px 0;
+    height: auto;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; 
+  }
+
+  .card-tarj {
+    width: 100%; 
+    margin: 10px 0; 
+    height: auto;
+  }
+
+  .container-tarj .card-tarj:hover {
+    height: auto; /* Altura automática en el hover */
+  }
+  .imgBx {
+    width: 100%; /* Ocupar todo el ancho disponible */
+    height: auto; /* Altura automática */
+  }
+  .container-tarj .card-tarj:hover .imgBx {
+    top: 0; /* Volver a la posición original */
+    transform: scale(1); /* Restablecer la escala */
+  }
+
+}
+@media (max-width: 767px) {
+  .container__card {
+    flex-direction: column;
+  }
+
+  .card {
+    max-width: none;
+  }
+  .card__front,
+  .card__back {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .card__back {
+    transform: rotateY(180deg);
+  }
+}
 
   /* servicios */
 
@@ -581,7 +641,6 @@ footer{
     cursor: pointer;
     text-decoration: none; 
   }
-  /*Equipo*/
 
   .form-formulario {
     padding: 10px;
@@ -623,18 +682,6 @@ footer{
   .textos-header h2{
       font-size: 20px;
   }
-
-  /* ABOUT US */
-
-  .imagen-about-us{
-      margin-bottom: 60px;
-      width: 99%;
-  }
-
-  .sobre-nosotros .contenido-textos{
-      width: 95%;
-  }
-
       /* Galeria */
 
   .imagen-port{
@@ -643,7 +690,7 @@ footer{
 
   /* Clients */
 
-  .cards .card .tarjeta{
+  .cards .card {
       height: 450px;
       display: flex;
       flex-direction: column;
@@ -685,5 +732,5 @@ footer{
   }
 }
 
-}
+
 
