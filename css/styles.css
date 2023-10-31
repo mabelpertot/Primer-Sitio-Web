@@ -155,8 +155,8 @@ header .textos-header{
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 50px;
-  padding: 100px 50px;
+  gap: 20px;
+  padding: 50px 20px;
 }
 .container-tarj .card-tarj{
   position: relative;
@@ -271,77 +271,77 @@ header .textos-header{
 /********** PAG PROFESIONAL **********/
 
 .container__card{
-    max-width: 1200px;
-    margin: auto;
-    margin-top: 100px;
-    perspective: 1000px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: center;
+  max-width: 1200px;
+  margin-bottom: 30px;
+  perspective: 1000px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 20px;
 }
 .card__father{
-    margin: 20px;
-    perspective: 1000px;
+  margin: 10px;
+  perspective: 1000px;
 }
 .card__father:hover .card{
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 .card{
-    width: 400px;
-    height: 400px;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: all 600ms;
+  width: 400px;
+  height: 400px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 600ms;
 }
 .card__front{
-    background-size: cover;
-    background-position: center;
+  background-size: cover;
+  background-position: center;
 }
 .card__front,
 .card__back{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    border-radius: 20px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  border-radius: 20px;
 }
 .card__back{
-    transform: rotateY(180deg);
-    background: rgba(209, 170, 227, 0.605);
+  transform: rotateY(180deg);
+  background: rgba(209, 170, 227, 0.605);
 }
 .body__card_front{
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #f6f1f1;
-    transform: translateZ(60px);
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f6f1f1;
+  transform: translateZ(60px);
 }
 .bg{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: -webkit-linear-gradient(to right, hsla(340, 95%, 50%, 0.459), hsla(317, 45%, 52%, 0.664));
-    background: linear-gradient(to right, hsla(340, 95%, 50%, 0.459), hsla(317, 45%, 52%, 0.664));
-    border-radius: 20px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: -webkit-linear-gradient(to right, hsla(340, 95%, 50%, 0.459), hsla(317, 45%, 52%, 0.664));
+  background: linear-gradient(to right, hsla(340, 95%, 50%, 0.459), hsla(317, 45%, 52%, 0.664));
+  border-radius: 20px;
 }
 .body__card_back{
-    padding: 40px;
-    text-align: center;
-    transform: translateZ(60px);
+  padding: 40px;
+  text-align: center;
+  transform: translateZ(60px);
 }
 .body__card_back p{
-    margin-top: 30px;
-    font-size: 18px;
+  margin-top: 30px;
+  font-size: 18px;
 }
 
 /********* PAG CONTACTO **********/
@@ -472,7 +472,7 @@ footer{
 .form-formulario {
   background: -webkit-linear-gradient(to right, hsla(252, 23%, 50%, 0.459), hsla(298, 28%, 79%, 0.664));
   background: linear-gradient(to right, hsla(252, 23%, 50%, 0.459), hsla(298, 28%, 79%, 0.664));
-  width: 60%;
+  max-width: 600%;
   margin: 0 auto;
   background-color: #f3f3f3;
   padding: 20px;
@@ -485,6 +485,7 @@ footer{
   flex-wrap: wrap;
   align-items: center; 
   margin-bottom: 10px;
+  max-width: 60%;
 }
 .label-formulario {
   display: block;
@@ -524,22 +525,6 @@ footer{
   margin-top: 40px;
   border-radius: 5px;
 }
-.confirmation-message {
-  border: 1px solid #baa2a2;
-  border-radius: 10px;
-  padding: 15px;
-  margin-top: 15px;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.user-options {
-  display: none;
-  padding: 10px;
-  background-color: #4e4a4aa1;
-  border: 1px solid #655858;
-  margin-top: 40px;
-  border-radius: 5px;
-}
 
 
 /*********** RESPONSIVE ***********/
@@ -547,14 +532,12 @@ footer{
 @media screen and (max-width:768px){
 
   .titulo {
-    margin-bottom: 10px; 
+    padding: 60px 0 20px 0;
   }
   header {
     background-position: center;
   }
-  
     /* epecialidades-galeria */
-
   .imagen-port{
     width: 50%;
   }
@@ -578,157 +561,119 @@ footer{
     padding: 20px; 
   }
   .tarjeta {
-    flex: 1; 
+    display: block;
     width: 100%;
+    margin-bottom: 10px;
   }
-
-  .container-tarj {
-    width: 100%; 
-    margin: 10px 0;
-    height: auto;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px; 
+ .card-tarj:hover {
+    height: auto; 
   }
-
-  .card-tarj {
-    width: 100%; 
-    margin: 10px 0; 
-    height: auto;
-  }
-
-  .container-tarj .card-tarj:hover {
-    height: auto; /* Altura automática en el hover */
-  }
-  .imgBx {
-    width: 100%; /* Ocupar todo el ancho disponible */
-    height: auto; /* Altura automática */
-  }
+  .container-tarj .card-tarj .imgBx{
+    position: relative;
+    padding: 0px;
+    overflow: hidden;
+    box-sizing: border-box;
+  } 
   .container-tarj .card-tarj:hover .imgBx {
-    top: 0; /* Volver a la posición original */
-    transform: scale(1); /* Restablecer la escala */
+    top: 0; 
+    transform: scale(1); 
   }
-
 }
 @media (max-width: 767px) {
   .container__card {
-    flex-direction: column;
+    position: relative;
+    padding: 0px;
+    overflow: hidden;
+    box-sizing: border-box;
   }
-
   .card {
     max-width: none;
   }
   .card__front,
   .card__back {
     width: 100%;
-    overflow: visible;
+    overflow: hidden;
+    position: absolute;  
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   }
-
   .card__back {
     transform: rotateY(180deg);
   }
 }
-
-  /* servicios */
-
-  .expand-button,
-  .reserve-button {
-    background-color: #0077b6;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none; 
-  }
-
   .form-formulario {
     padding: 10px;
-    width: 100%;
     max-width: 100%;
-    padding: 10px;
   }
   .form-group {
     margin-bottom: 8px;
   }
-
   .submit-button {
     padding: 8px 16px;
     font-size: 14px;
   }
-
   .confirmation-message {
     padding: 10px;
   }
-
   .user-options {
     margin-top: 20px;
     padding: 10px;
   }
 
-
 @media screen and (max-width:480px){
   nav{
-      text-align: center;
-      padding: 30px 0 0 0;
+    text-align: center;
+    padding: 30px 0 0 0;
   }
   nav > a{
-      margin-right: 5px;
+    margin-right: 5px;
   }
   .textos-header h1{
-      font-size: 35px;
-      margin-right: 5px;
+    font-size: 35px;
+    margin-right: 5px;
   }
   .textos-header h2{
-      font-size: 20px;
+    font-size: 20px;
   }
-      /* Galeria */
-
+  /* Galeria */
   .imagen-port{
     width: 95%;
   }
-
   /* Clients */
 
   .cards .card {
-      height: 450px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    height: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-
   .cards .card img{
-      width: 90px;
-      height: 90px;
+    width: 100px;
+    height: 90px;
   }
-
   /* Footer */
 
   .contenedor-footer{
-      flex-direction: column;
-      border: none;
+    flex-direction: column;
+    border: none;
   }
-
   .content-foo{
-      margin-bottom: 20px;
-      text-align: center;
+    margin-bottom: 20px;
+    text-align: center;
   }
-
   .content-foo h4{
-      border: none;
+    border: none;
   }
-
   .content-foo p{
-      color: #ccc;
-      border-bottom: 1px solid #f2f2f2;
-      padding-bottom: 20px;
+    color: #ccc;
+    border-bottom: 1px solid #f2f2f2;
+    padding-bottom: 20px;
   }
-
   .titulo-final{
-      font-size: 20px;
+    font-size: 20px;
   }
-  .titulo {
-    margin-bottom: 100px;
+  iframe {
+    width: 100%;
   }
 }
 
