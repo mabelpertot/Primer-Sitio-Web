@@ -485,7 +485,6 @@ footer{
   flex-wrap: wrap;
   align-items: center; 
   margin-bottom: 10px;
-  max-width: 60%;
 }
 .label-formulario {
   display: block;
@@ -526,7 +525,6 @@ footer{
   border-radius: 5px;
 }
 
-
 /*********** RESPONSIVE ***********/
 /* Media queries*/
 @media screen and (max-width:768px){
@@ -541,7 +539,6 @@ footer{
   .imagen-port{
     width: 50%;
   }
-
   /* contacto-tarjetas clientes */
   .cards {
     flex-direction: column;

@@ -34,6 +34,7 @@
 
   <main>    
     <h2 class="titulo">Formulario de registro</h2>
+            <form class="form-formulario" method="POST" action="{{ url_for('registration_form') }}">
     <form class="form-formulario" id="registration-form">        
       <label class="label-formulario" for="nombre">Nombre/s:</label>
       <input class="input-formulario" type="text" id="nombre" required placeholder="Ingrese su nombre/s...">
