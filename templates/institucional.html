@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" href="{{ url_for('static', filename='imagenes/favicon.png') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  
+  <title>Institucional - Odontología Integral</title>
+
+</head>
+<body>
+  <header>    
+    <nav>      
+      <a href="{{ url_for('index') }}" class="page-box">Institucional</a>
+      <a href="{{ url_for('servicios') }}" class="page-box">Servicios</a>
+      <a href="{{ url_for('equipo') }}" class="page-box">Equipo</a>
+      <a href="{{ url_for('especialidades') }}" class="page-box">Especialidades</a>
+      <a href="{{ url_for('contacto') }}" class="page-box">Contacto</a>
+      <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios."class="whatsapp-button">
+          <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp">      
+    </nav>
+    
+    <section class="textos-header">
+      <h1>Bienvenido a Odontología Integral</h1>
+      <h2>En nuestros consultorios sentite como en casa.</h2>
+    </section> 
+    
+    <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
+      style="height: 100%; width: 100%;">
+      <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
+      style="stroke: none; fill: #fff;"></path>
+    </svg>
+    </div> 
+
+  </header>
+
+  <main>
+    <h2 class="titulo">Nuestros Valores</h2>
+    <div class="container-tarjeta"> 
+      <div class="tarjeta">
+        <figure>
+          <img src="{{ url_for('static', filename='imagenes/ValoresCal.png') }}" alt="">
+
+        </figure>
+        <div class="contenido-tarjeta">
+          <h3>Calidad</h3>
+          <p>La calidad es el núcleo de nuestra misión. Nos esforzamos por superar las expectativas de nuestros pacientes en cada paso de su atención odontológica. Desde la precisión de nuestros diagnósticos hasta la efectividad de nuestros tratamientos, nuestra prioridad es brindar servicios de la más alta calidad. Utilizamos tecnologías de vanguardia y enfoques basados en evidencia para asegurarnos de que su experiencia en nuestro sanatorio sea sinónimo de excelencia.</p>
+        </div>
+      </div>
+      <div class="tarjeta">
+        <figure>
+          <img src="{{ url_for('static', filename='imagenes/ValoresComp.png') }}" alt="">
+
+        </figure>
+        <div class="contenido-tarjeta">
+          <h3>Competencia</h3>
+          <p>Nuestro equipo de profesionales está compuesto por odontólogos altamente calificados y en constante formación. Estamos al día con las últimas tendencias y avances en odontología para garantizar que nuestros pacientes reciban el mejor cuidado posible. La competencia de nuestro equipo se traduce en tratamientos efectivos y soluciones personalizadas que abordan sus necesidades dentales de manera integral.</p>
+        </div>
+      </div>
+      <div class="tarjeta">
+        <figure>
+          <img src="{{ url_for('static', filename='imagenes/ValoresCompr.png') }}" alt="">
+
+        </figure>
+        <div class="contenido-tarjeta">
+          <h3>Compromiso</h3>
+          <p>El compromiso con nuestros pacientes es fundamental en nuestra misión. Nos esforzamos por brindar un trato empático y compasivo, escuchando sus necesidades y deseos en cada paso del camino. Entendemos que cada paciente es único, y nuestro compromiso es adaptar nuestros servicios para que se sienta cómodo y respaldado en todo momento. Su bienestar es nuestra prioridad.</p>
+        </div>
+      </div>
+      <div class="tarjeta">
+        <figure>
+          <img src="{{ url_for('static', filename='imagenes/ValoresSeg.png') }}" alt="">
+        </figure>
+        <div class="contenido-tarjeta">
+          <h3>Seguridad</h3>
+          <p>La seguridad es un pilar fundamental en nuestro enfoque. Cumplimos rigurosamente con todas las regulaciones y protocolos de seguridad sanitaria para garantizar que su experiencia en nuestro sanatorio sea segura y libre de riesgos. Mantenemos un ambiente limpio y esterilizado, y tomamos medidas exhaustivas para salvaguardar su salud.</p>
+        </div>
+      </div>
+    </div>  
+  </main>
+
+  <footer>
+    <div class="wave" style="height: 150px; overflow: hidden;">
+      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
+        <path d="M0.00,100.02 C150.00,200.00 349.20,0.00 500.00,100.02 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #fff;"></path>
+      </svg>
+    </div>
+    <div class="contenedor-footer">
+      <div class="content-foo">
+        <h4>Seguinos</h4>
+         <img src="{{ url_for('static', filename='imagenes/facebook.png') }}" alt= "facebook" class="social-icon">
+         <img src="{{ url_for('static', filename='imagenes/instagram.png') }}" alt= "instagam" class="social-icon">
+      </div>
+      <div class="content-foo">              
+        <h4>Contactanos</h4>
+        <img src="{{ url_for('static', filename='imagenes/whatsapp.png') }}" alt="WhatsApp" class="social-icon">
+      </div>
+      <div class="content-foo">
+        <h4>Consultanos</h4>
+        <img src="{{ url_for('static', filename='imagenes/email.png') }}" alt="Email" class="social-icon">info@odontologicoIntegral.com
+      </div>
+      <div class="content-foo">
+        <h4>¡Te esperamos!</h4>
+        <img src="{{ url_for('static', filename='imagenes/marcador-de-posicion.png') }}" alt="Ubicación" class="social-icon">Arana, Monte Grande, Esteban Echeverría            
+      </div>
+    </div><br>
+    <h2 class="titulo-final">&copy; Odontología Integral 2023. Todos los derechos reservados</h2><br>
+    <img src="{{ url_for('static', filename='imagenes/mp.png') }}" alt="logo" class="social-icon">
+    <p>Desarrollo Web</p>
+
+
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>
+
+
+
+

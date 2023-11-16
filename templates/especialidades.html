@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">  
+  <title>Especialidades - Odontología Integral</title>
+
+  <img src="{{ url_for('static', filename='imagenes/favicon.png') }}" alt="Favicon" style="width: 50px; height: 50px;">
+
+</head>
+<body>
+  <header>
+    <nav>      
+      <a href="{{ url_for('index') }}" class="page-box">Institucional</a>
+      <a href="{{ url_for('servicios') }}" class="page-box">Servicios</a>
+      <a href="{{ url_for('equipo') }}" class="page-box">Equipo</a>
+      <a href="{{ url_for('especialidades') }}" class="page-box">Especialidades</a>
+      <a href="{{ url_for('contacto') }}" class="page-box">Contacto</a>
+      <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios."class="whatsapp-button">
+        <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp"></a>      
+    </nav>
+
+    <section class="textos-header">
+      <h1>Bienvenido a Odontología Integral</h1>
+      <h2>En nuestros consultorios sentite como en casa.</h2>
+    </section> 
+    
+    <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
+      style="height: 100%; width: 100%;">
+      <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
+      style="stroke: none; fill: #fff;"></path>
+    </svg>
+    </div> 
+  </header>
+  
+  <main>
+    <h2 class="titulo">Nuestras Especialidades</h2>
+    <section class="productos">
+      <div class="contenedor">
+          <div class="galeria-port">
+            <div class="imagen-port">
+              <img src="{{ url_for('static', filename='imagenes/general.png') }}" alt="Odontología General" class="specialty-image">
+              <div class="hover-galeria">
+                <img src="{{ url_for('static', filename='/imagenes/icono1.png') }}" alt="">
+                <h3>Odontología General</h3>
+                <p>Nuestra especialidad en odontología general se enfoca en mantener la salud dental de nuestros pacientes de todas las edades. Realizamos limpiezas, tratamientos de caries.</p>
+              </div>
+            </div>
+            <div class="imagen-port">
+              <img src="{{ url_for('static', filename='imagenes/odontopediatria.png') }}" alt="Odontología Pediátrica" class="specialty-image"><br>
+              <div class="hover-galeria">
+                <img src="{{ url_for('static', filename='/imagenes/icono1.png') }}" alt="">
+                <h3>Odontología Pediátrica</h3>
+                <p>Nuestros dentistas pediátricos están dedicados a brindar cuidados dentales amigables y adaptados a los más pequeños. Desde revisiones hasta tratamientos especializados.</p>
+              </div>
+            </div>
+            <div class="imagen-port">            
+              <img src="{{ url_for('static', filename='imagenes/periodoncia.png') }}" alt="Periodoncia" class="specialty-image"><br>
+              <div class="hover-galeria">
+                <img src="{{ url_for('static', filename='/imagenes/icono1.png') }}" alt="">
+                <h3>Periodoncia</h3>
+                <p>Estudio, prevención y tratamiento de aquellas patologías que afectan a los tejidos que protegen, rodean y sujetan los dientes: encía, hueso alveolar, ligamento periodontal y cemento radicular.</p><br>
+              </div>
+            </div>
+            <div class="imagen-port">
+              <img src="{{ url_for('static', filename='imagenes/endodoncia.png') }}" alt="Endodoncia" class="specialty-image"><br>
+              <div class="hover-galeria">
+                <img src="{{ url_for('static', filename='/imagenes/icono1.png') }}" alt="">
+                <h3>Endodoncia</h3>
+                <p>Comúnmente llamado tratamiento de conducto. Procedimiento para preservar las piezas dentales dañadas, evitando su pérdida.</p>
+              </div>
+            </div>
+            <div class="imagen-port">
+              <img src="{{ url_for('static', filename='imagenes/cirugia.png') }}" alt="Cirugía Odontológica" class="specialty-image"><br>
+              <div class="hover-galeria">
+                <img src="{{ url_for('static', filename='/imagenes/icono1.png') }}" alt="">
+                <h3>Cirugía Odontológica</h3>
+                <p>Nuestra especialidad en cirugía odontológica se enfoca en procedimientos quirúrgicos para abordar problemas dentales más complejos. Realizamos extracciones, implantes, cirugía de encías y más.</p><br>
+              </div>
+            </div>
+            <div class="imagen-port">
+              <img src="{{ url_for('static', filename='imagenes/guardia.png') }}" alt="Guardia" class="specialty-image"><br>
+              <div class="hover-galeria">
+                <img src="{{ url_for('static', filename='/imagenes/icono1.png') }}" alt="">
+                <h3>Guardia</h3>
+                <p>Las guardias funcionan por orden de llegada y sin necesidad de solicitar turnos. Se tratan aquellas patologías de urgente tratamiento. Lunes a Viernes de 8 a 18 hs.</p><br>
+              </div>
+            </div>
+          </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wave" style="height: 150px; overflow: hidden;">
+      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
+        <path d="M0.00,100.02 C150.00,200.00 349.20,0.00 500.00,100.02 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #fff;"></path>
+      </svg>
+    </div>
+    <div class="contenedor-footer">
+      <div class="content-foo">
+        <h4>Seguinos</h4>
+         <img src="{{ url_for('static', filename='imagenes/facebook.png') }}" alt= "facebook" class="social-icon">
+         <img src="{{ url_for('static', filename='imagenes/instagram.png') }}" alt= "instagam" class="social-icon">
+      </div>
+      <div class="content-foo">              
+        <h4>Contactanos</h4>
+        <img src="{{ url_for('static', filename='imagenes/whatsapp.png') }}" alt="WhatsApp" class="social-icon">
+      </div>
+      <div class="content-foo">
+        <h4>Consultanos</h4>
+        <img src="{{ url_for('static', filename='imagenes/email.png') }}" alt="Email" class="social-icon">info@odontologicoIntegral.com
+      </div>
+      <div class="content-foo">
+        <h4>¡Te esperamos!</h4>
+        <img src="{{ url_for('static', filename='imagenes/marcador-de-posicion.png') }}" alt="Ubicación" class="social-icon">Arana, Monte Grande, Esteban Echeverría            
+      </div>
+    </div><br>
+    <h2 class="titulo-final">&copy; Odontología Integral 2023. Todos los derechos reservados</h2><br>
+    <img src="{{ url_for('static', filename='imagenes/mp.png') }}" alt="logo" class="social-icon">
+    <p>Desarrollo Web</p>
+  </footer>
+
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</body>
+</html>
