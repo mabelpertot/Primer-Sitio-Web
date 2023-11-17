@@ -121,6 +121,8 @@ def formulario():
                     nuevo_confirmar_contrasena = form.confirmar_contrasena.data
                     nueva_consulta = form.consulta.data                
                 
+                print('Datos a insertar/actualizar:', nuevo_nombre, nuevo_apellido, nuevo_dni, ...)  # Agrega todos los campos
+
                 # Insertar datos en la base de datos
                 cursor.execute("""
                     INSERT INTO usuarios (nombre, apellido, dni, direccion, numero, codigo_postal, telefono, email, confirmar_email, contrasena, confirmar_contrasena, consulta)
@@ -136,8 +138,10 @@ def formulario():
                 return redirect(url_for('formulario'))
 
             except Exception as e:
+                print('Error al procesar el formulario:', e)
                 return 'Error: {}'.format(e)
         else:
+            print('Formulario no válido. Errores:', form.errors)
             return render_template('formulario.html', form=form)
                 
                 
