@@ -1,5 +1,8 @@
 import mysql.connector
 
+from flask import jsonify
+
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField
@@ -9,7 +12,7 @@ from flask import flash
 
 app = Flask(__name__)
 
-# Configuración de la base de datos
+# Configuración de la base de datos. Conexión a la base de datos
 db_config = {
     'user': 'root',
     'password': 'root',
@@ -23,7 +26,7 @@ conexion = mysql.connector.connect(**db_config)
 # Crear un cursor para ejecutar consultas SQL
 cursor = conexion.cursor()
 
-# Crear la tabla si no existe
+# Crear la tabla si no existe para almacenar los datos
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS usuarios (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -47,7 +50,6 @@ conexion.commit()
 class UsuarioForm(FlaskForm):
     id = HiddenField()  # Agrega un campo oculto para el ID
     nombre = StringField('Nombre', validators=[DataRequired()])
-    nombre = StringField('Nombre', validators=[DataRequired()])
     apellido = StringField('Apellido', validators=[DataRequired()])
     dni = StringField('DNI', validators=[DataRequired()])
     direccion = StringField('Dirección', validators=[DataRequired()])
@@ -60,8 +62,9 @@ class UsuarioForm(FlaskForm):
     confirmar_contrasena = PasswordField('Confirmar Contraseña', validators=[DataRequired()])
     consulta = TextAreaField('Consulta')
 
-# Rutas
-
+# Rutas y funciones flask
+# ... Lógica para mostrar o procesar el formulario ...
+# Presentación del formulario, ;procesamiento de datos 
 @app.route('/formulario', methods=['GET', 'POST'])
 def formulario():
     if request.method == 'GET':
