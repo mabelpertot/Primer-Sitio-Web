@@ -411,7 +411,7 @@ iframe {
 footer{
   background: -webkit-linear-gradient(to right, hsla(340, 95%, 50%, 0.459), hsla(317, 45%, 52%, 0.664));
   background: linear-gradient(to right, hsla(340, 95%, 50%, 0.459), hsla(317, 45%, 52%, 0.664));
-  padding: 60px 0 30px 0;
+  padding: 0px 0 30px 0;
   margin: auto;
   overflow: hidden;
   position: relative;

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
   <img src="{{ url_for('static', filename='imagenes/favicon.png') }}" alt="Favicon" style="width: 50px; height: 50px;">
 
 </head>
+
 <body>
 
 {% with messages = get_flashed_messages() %}
@@ -99,35 +101,41 @@
   </main>
   
   <img src="{{ url_for('static', filename='imagenes/envio.png') }}" alt="">
-    <section class="clientes contenedor">
-      <h2 class="titulo">¡Te esperamos!</h2>
-      <div class="cards">
-          <div class="card">
-            <img src="{{ url_for('static', filename='imagenes/calendario.png') }}" alt="">
-              <div class="contenido-texto-card">
-                  <h4>Horarios de Atencion</h4>
-                  <p>Lunes a viernes  8:00 a 18:00hs</p>
-                  <p>Sábados  9:00 a 13:00hs</p>
-              </div>
-          </div>
-          <div class="card">
-            <img src="{{ url_for('static', filename='imagenes/map.png') }}" alt="">           
-              <div class="contenido-texto-card">
-                <h4>Nuestra ubicación en el mapa</h4>
-                <p>Arana, Monte Grande, Esteban Echeverría</p>                 
-              </div><br>
-          </div><br>
-        </div>       
-    </section>
 
-    <div class="contenedor-del-iframe">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3275.696776748904!2d-58.46642380000004!3d-34.8135698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcd163a82d15e9%3A0x141028019cec648a!2sEduardo%20Arana%20228%2C%20B1842BWF%20Monte%20Grande%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1692651067495!5m2!1ses-419!2sar" width="350" height="150" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div><br> 
+  <section class="clientes contenedor">
+    <h2 class="titulo">¡Te esperamos!</h2>
+    <div class="cards">
+        <div class="card">
+          <img src="{{ url_for('static', filename='imagenes/calendario.png') }}" alt="">
+            <div class="contenido-texto-card">
+                <h4>Horarios de Atencion</h4>
+                <p>Lunes a viernes  8:00 a 18:00hs</p>
+                <p>Sábados  9:00 a 13:00hs</p>
+            </div>
+        </div>
+        <div class="card">
+          <img src="{{ url_for('static', filename='imagenes/map.png') }}" alt="">           
+            <div class="contenido-texto-card">
+              <h4>Nuestra ubicación en el mapa</h4>
+              <p>Arana, Monte Grande, Esteban Echeverría</p>                 
+            </div><br>
+        </div><br>
+      </div>       
+  </section>
 
+  <div class="contenedor-del-iframe">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3275.696776748904!2d-58.46642380000004!3d-34.8135698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcd163a82d15e9%3A0x141028019cec648a!2sEduardo%20Arana%20228%2C%20B1842BWF%20Monte%20Grande%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1692651067495!5m2!1ses-419!2sar" width="350" height="150" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div><br> 
+
+  
   <footer>
-    <div class="wave" style="height: 150px; overflow: hidden;">
-      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-        <path d="M0.00,100.02 C150.00,200.00 349.20,0.00 500.00,100.02 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #fff;"></path>
+    <div class="wave" style="height: 150px; overflow: hidden; position: relative;">
+      <!-- Contenido del footer dentro del área de la onda -->
+      <div style="position: relative; z-index: 1; background-color: #fff;">
+        <!-- Tu contenido del footer aquí -->
+      </div>
+      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%; position: absolute; bottom: 0; left: 0; z-index: 0;">
+        <path d="M0.00,100.00 C150.00,200.00 349.20,0.00 500.00,100.00 L500.00,0.00 L0.00,0.00 Z" style="stroke: none; fill: #fff;"></path>
       </svg>
     </div>
     <div class="contenedor-footer">

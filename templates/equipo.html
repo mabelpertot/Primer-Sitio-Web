@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,9 @@
   <img src="{{ url_for('static', filename='imagenes/favicon.png') }}" alt="Favicon" style="width: 50px; height: 50px;">
 
 </head>
+
 <body>
+
   <header>
     <nav>      
       <a href="{{ url_for('index') }}" class="page-box">Institucional</a>
@@ -122,11 +125,15 @@
   </main>
 
   <footer>
-    <div class="wave" style="height: 150px; overflow: hidden;">
-      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-        <path d="M0.00,100.02 C150.00,200.00 349.20,0.00 500.00,100.02 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #fff;"></path>
+    <div class="wave" style="height: 150px; overflow: hidden; position: relative;">
+      <!-- Contenido del footer dentro del área de la onda -->
+      <div style="position: relative; z-index: 1; background-color: #fff;">
+        <!-- Tu contenido del footer aquí -->
+      </div>
+      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%; position: absolute; bottom: 0; left: 0; z-index: 0;">
+        <path d="M0.00,100.00 C150.00,200.00 349.20,0.00 500.00,100.00 L500.00,0.00 L0.00,0.00 Z" style="stroke: none; fill: #fff;"></path>
       </svg>
-    </div>
+    </div>*
     <div class="contenedor-footer">
       <div class="content-foo">
         <h4>Seguinos</h4>
