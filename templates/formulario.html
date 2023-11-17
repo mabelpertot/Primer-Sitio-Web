@@ -11,6 +11,17 @@
 
 </head>
 <body>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
   <header>
     <nav>      
       <a href="{{ url_for('index') }}" class="page-box">Institucional</a>
@@ -37,13 +48,15 @@
 
   <main>    
     <h2 class="titulo">Formulario de registro</h2>
-    <form class="form-formulario" method="POST" 
+    <form id="registration-form" class="form-formulario" method="POST"
       {% if usuario and usuario.id %}
-          action="{{ url_for('modificar', id_usuario=usuario.id) }}"
+      action="{{ url_for('modificar', id_usuario=usuario.id) }}"
       {% else %}
-          action="{{ url_for('index') }}"
+      action="{{ url_for('index') }}"
       {% endif %}
-    >
+    >       
+      <input type="hidden" name="id" value="{{ usuario.id if usuario else '' }}">
+      
       <label class="label-formulario" for="nombre">Nombre/s:</label>
       <input class="input-formulario" type="text" id="nombre" name="nombre" required placeholder="Ingrese su nombre/s...">
       

@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="icon" href="{{ url_for('static', filename='imagenes/favicon.png') }}" type="image/x-icon">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-  
   <title>Institucional - Odontología Integral</title>
+
+  <img src="{{ url_for('static', filename='imagenes/favicon.png') }}" alt="Favicon" style="width: 50px; height: 50px;">
 
 </head>
 <body>
@@ -19,7 +19,7 @@
       <a href="{{ url_for('especialidades') }}" class="page-box">Especialidades</a>
       <a href="{{ url_for('contacto') }}" class="page-box">Contacto</a>
       <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios."class="whatsapp-button">
-          <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp">      
+          <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp"></a>      
     </nav>
     
     <section class="textos-header">

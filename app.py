@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, Email
+from wtforms import HiddenField
+from flask import flash
 
 app = Flask(__name__)
 
@@ -43,6 +45,8 @@ conexion.commit()
 
 # Definir el formulario utilizando Flask-WTF
 class UsuarioForm(FlaskForm):
+    id = HiddenField()  # Agrega un campo oculto para el ID
+    nombre = StringField('Nombre', validators=[DataRequired()])
     nombre = StringField('Nombre', validators=[DataRequired()])
     apellido = StringField('Apellido', validators=[DataRequired()])
     dni = StringField('DNI', validators=[DataRequired()])
@@ -58,20 +62,82 @@ class UsuarioForm(FlaskForm):
 
 # Rutas
 
-@app.route('/templates/formulario', methods=['get', 'post'])
+@app.route('/formulario', methods=['GET', 'POST'])
 def formulario():
     if request.method == 'GET':
         # obtener la lista de usuarios desde la base de datos y pasarla al template
-        cursor.execute("select id, nombre, apellido from usuarios")
+        cursor.execute("SELECT id, nombre, apellido FROM usuarios")
         usuarios = cursor.fetchall()
         # define 'usuario' as none for the initial render
         usuario = None
         return render_template('formulario.html', usuarios=usuarios, usuario=usuario)
 
     elif request.method == 'POST':
-        # handle the form submission logic if needed
-        return redirect(url_for('index.html'))  # redirect to the index page after form submission
+        form = UsuarioForm(request.form)
+        if form.validate():
+            try:
+                if form.id.data:  # Si hay un ID en el formulario, entonces es una actualización
+                    id_usuario = form.id.data
+                    nuevo_nombre = form.nombre.data
+                    nuevo_apellido = form.apellido.data
+                    nuevo_dni = form.dni.data
+                    nuevo_direccion = form.direccion.data
+                    nuevo_numero = form.numero.data
+                    nuevo_codigo_postal = form.codigo_postal.data
+                    nuevo_telefono = form.telefono.data
+                    nuevo_email = form.email.data
+                    nuevo_confirmar_email = form.confirmar_email.data
+                    nuevo_contrasena = form.contrasena.data
+                    nuevo_confirmar_contrasena = form.confirmar_contrasena.data
+                    nueva_consulta = form.consulta.data
+                
+                                    # Actualizar datos en la base de datos
+                    cursor.execute("""
+                        UPDATE usuarios
+                        SET nombre=%s, apellido=%s, dni=%s, direccion=%s, numero=%s,
+                        codigo_postal=%s, telefono=%s, email=%s, confirmar_email=%s,
+                        contrasena=%s, confirmar_contrasena=%s, consulta=%s
+                        WHERE id=%s
+                    """, (
+                        nuevo_nombre, nuevo_apellido, nuevo_dni, nuevo_direccion, nuevo_numero,
+                        nuevo_codigo_postal, nuevo_telefono, nuevo_email, nuevo_confirmar_email,
+                        nuevo_contrasena, nuevo_confirmar_contrasena, nueva_consulta, id_usuario
+                    ))
 
+                else:  # Si no hay un ID, entonces es una inserción
+                    nuevo_nombre = form.nombre.data
+                    nuevo_apellido = form.apellido.data
+                    nuevo_dni = form.dni.data
+                    nuevo_direccion = form.direccion.data
+                    nuevo_numero = form.numero.data
+                    nuevo_codigo_postal = form.codigo_postal.data
+                    nuevo_telefono = form.telefono.data
+                    nuevo_email = form.email.data
+                    nuevo_confirmar_email = form.confirmar_email.data
+                    nuevo_contrasena = form.contrasena.data
+                    nuevo_confirmar_contrasena = form.confirmar_contrasena.data
+                    nueva_consulta = form.consulta.data                
+                
+                # Insertar datos en la base de datos
+                cursor.execute("""
+                    INSERT INTO usuarios (nombre, apellido, dni, direccion, numero, codigo_postal, telefono, email, confirmar_email, contrasena, confirmar_contrasena, consulta)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    nuevo_nombre, nuevo_apellido, nuevo_dni, nuevo_direccion, nuevo_numero,
+                    nuevo_codigo_postal, nuevo_telefono, nuevo_email, nuevo_confirmar_email,
+                    nuevo_contrasena, nuevo_confirmar_contrasena, nueva_consulta
+                ))
+
+                conexion.commit()
+                flash('Registro exitoso. Nos pondremos en contacto pronto.', 'success')
+                return redirect(url_for('formulario'))
+
+            except Exception as e:
+                return 'Error: {}'.format(e)
+        else:
+            return render_template('formulario.html', form=form)
+                
+                
 @app.route('/')
 def index():  
     return render_template('index.html')
@@ -136,21 +202,22 @@ def modificar(id_usuario):
             cursor.execute("SELECT * FROM usuarios WHERE id=%s", (id_usuario,))
             usuario = cursor.fetchone()
 
-            return render_template('formulario.html', usuario=usuario)
+            return redirect(url_for('formulario'))
 
         except Exception as e:
             return f"Error al modificar datos: {e}"
         
-@app.route('/eliminar/<int:id_usuario>')
+@app.route('/eliminar/<int:id_usuario>', methods=['DELETE'])
 def eliminar(id_usuario):
     try:
         # Eliminar usuario de la base de datos
         cursor.execute("DELETE FROM usuarios WHERE id=%s", (id_usuario,))
         conexion.commit()
-        return redirect(url_for('index'))
+        return jsonify({"message": "Usuario eliminado correctamente"}), 200
 
     except Exception as e:
-        return f"Error al eliminar usuario: {e}"
+        return jsonify({"error": f"Error al eliminar usuario: {e}"}), 500
+
         
 
 if __name__ == '__main__':
