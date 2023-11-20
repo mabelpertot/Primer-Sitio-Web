@@ -8,6 +8,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, Email
 from wtforms import HiddenField
+from flask_mail import Mail, Message
 from flask import flash
 
 app = Flask(__name__)
@@ -78,8 +79,10 @@ def formulario():
     elif request.method == 'POST':
         form = UsuarioForm(request.form)
         if form.validate():
+            print('Formulario válido. Procediendo con la inserción.')
             try:
                 if form.id.data:  # Si hay un ID en el formulario, entonces es una actualización
+                    print('Intento de actualización. ID:', form.id.data)
                     id_usuario = form.id.data
                     nuevo_nombre = form.nombre.data
                     nuevo_apellido = form.apellido.data
@@ -108,6 +111,7 @@ def formulario():
                     ))
 
                 else:  # Si no hay un ID, entonces es una inserción
+                    print('Formulario no válido. Errores:', form.errors)
                     nuevo_nombre = form.nombre.data
                     nuevo_apellido = form.apellido.data
                     nuevo_dni = form.dni.data
@@ -142,8 +146,7 @@ def formulario():
                 return 'Error: {}'.format(e)
         else:
             print('Formulario no válido. Errores:', form.errors)
-            return render_template('formulario.html', form=form)
-                
+            return render_template('formulario.html', form=form)      
                 
 @app.route('/')
 def index():  
@@ -214,6 +217,10 @@ def modificar(id_usuario):
         except Exception as e:
             return f"Error al modificar datos: {e}"
         
+        finally:
+            cursor.close()
+            conexion.close()
+        
 @app.route('/eliminar/<int:id_usuario>', methods=['DELETE'])
 def eliminar(id_usuario):
     try:
@@ -225,7 +232,10 @@ def eliminar(id_usuario):
     except Exception as e:
         return jsonify({"error": f"Error al eliminar usuario: {e}"}), 500
 
-        
+    finally:
+        cursor.close()
+        conexion.close()       
 
 if __name__ == '__main__':
     app.run(debug=True)
+
