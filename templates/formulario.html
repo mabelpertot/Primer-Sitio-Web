@@ -30,7 +30,7 @@
       <a href="{{ url_for('servicios') }}" class="page-box">Servicios</a>
       <a href="{{ url_for('equipo') }}" class="page-box">Equipo</a>
       <a href="{{ url_for('especialidades') }}" class="page-box">Especialidades</a>
-      <a href="{{ url_for('contacto') }}" class="page-box">Contacto</a>
+      <a href="{{ url_for('formulario') }}" class="page-box">Contacto</a>
       <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios."class="whatsapp-button">
         <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp"></a>     
     </nav>
@@ -50,13 +50,13 @@
 
   <main>    
     <h2 class="titulo">Formulario de registro</h2>
-    <form id="registration-form" class="form-formulario" method="POST"
+    <form id="registration-form" class="form-formulario" method="POST" action="{{ url_for('formulario') }}"
       {% if usuario and usuario.id %}
       action="{{ url_for('modificar', id_usuario=usuario.id) }}"
       {% else %}
-      action="{{ url_for('index') }}"
+      action="{{ url_for('formulario') }}"
       {% endif %}
-    >       
+    >     
       <input type="hidden" name="id" value="{{ usuario.id if usuario else '' }}">
       
       <label class="label-formulario" for="nombre">Nombre/s:</label>

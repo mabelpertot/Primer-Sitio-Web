@@ -13,6 +13,15 @@ from flask import flash
 
 app = Flask(__name__)
 
+# Configuración de Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Reemplaza con el servidor de correo saliente
+app.config['MAIL_PORT'] = 587  # Puerto del servidor de correo saliente (generalmente 587 o 465)
+app.config['MAIL_USE_TLS'] = True  # Usar TLS para la conexión al servidor de correo
+app.config['MAIL_USERNAME'] = 'pruebacaccomision@gmail.com'  # Reemplaza con tu dirección de correo
+app.config['MAIL_PASSWORD'] = 'pruebacac'  # Reemplaza con tu contraseña de correo
+
+mail = Mail(app)
+
 # Configuración de la base de datos. Conexión a la base de datos
 db_config = {
     'user': 'root',
@@ -27,25 +36,26 @@ conexion = mysql.connector.connect(**db_config)
 # Crear un cursor para ejecutar consultas SQL
 cursor = conexion.cursor()
 
+def create_form_data_table():
 # Crear la tabla si no existe para almacenar los datos
-cursor.execute("""
-    CREATE TABLE IF NOT EXISTS usuarios (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nombre VARCHAR(255),
-        apellido VARCHAR(255),
-        dni VARCHAR(15),
-        direccion VARCHAR(255),
-        numero VARCHAR(15),
-        codigo_postal VARCHAR(15),
-        telefono VARCHAR(15),
-        email VARCHAR(255),
-        confirmar_email VARCHAR(255),
-        contrasena VARCHAR(255),
-        confirmar_contrasena VARCHAR(255),
-        consulta TEXT
-    )
-""")
-conexion.commit()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(255),
+            apellido VARCHAR(255),
+            dni VARCHAR(15),
+            direccion VARCHAR(255),
+            numero VARCHAR(15),
+            codigo_postal VARCHAR(15),
+            telefono VARCHAR(15),
+            email VARCHAR(255),
+            confirmar_email VARCHAR(255),
+            contrasena VARCHAR(255),
+            confirmar_contrasena VARCHAR(255),
+            consulta TEXT
+        )
+    """)
+    conexion.commit()
 
 # Definir el formulario utilizando Flask-WTF
 class UsuarioForm(FlaskForm):
@@ -82,21 +92,6 @@ def formulario():
             print('Formulario válido. Procediendo con la inserción.')
             try:
                 if form.id.data:  # Si hay un ID en el formulario, entonces es una actualización
-                    print('Intento de actualización. ID:', form.id.data)
-                    id_usuario = form.id.data
-                    nuevo_nombre = form.nombre.data
-                    nuevo_apellido = form.apellido.data
-                    nuevo_dni = form.dni.data
-                    nuevo_direccion = form.direccion.data
-                    nuevo_numero = form.numero.data
-                    nuevo_codigo_postal = form.codigo_postal.data
-                    nuevo_telefono = form.telefono.data
-                    nuevo_email = form.email.data
-                    nuevo_confirmar_email = form.confirmar_email.data
-                    nuevo_contrasena = form.contrasena.data
-                    nuevo_confirmar_contrasena = form.confirmar_contrasena.data
-                    nueva_consulta = form.consulta.data
-                
                                     # Actualizar datos en la base de datos
                     cursor.execute("""
                         UPDATE usuarios
@@ -105,66 +100,64 @@ def formulario():
                         contrasena=%s, confirmar_contrasena=%s, consulta=%s
                         WHERE id=%s
                     """, (
-                        nuevo_nombre, nuevo_apellido, nuevo_dni, nuevo_direccion, nuevo_numero,
-                        nuevo_codigo_postal, nuevo_telefono, nuevo_email, nuevo_confirmar_email,
-                        nuevo_contrasena, nuevo_confirmar_contrasena, nueva_consulta, id_usuario
+                        form.nombre.data, form.apellido.data, form.dni.data, form.direccion.data,
+                        form.numero.data, form.codigo_postal.data, form.telefono.data, form.email.data,
+                        form.confirmar_email.data, form.contrasena.data, form.confirmar_contrasena.data,
+                        form.consulta.data, form.id.data
                     ))
 
-                else:  # Si no hay un ID, entonces es una inserción
-                    print('Formulario no válido. Errores:', form.errors)
-                    nuevo_nombre = form.nombre.data
-                    nuevo_apellido = form.apellido.data
-                    nuevo_dni = form.dni.data
-                    nuevo_direccion = form.direccion.data
-                    nuevo_numero = form.numero.data
-                    nuevo_codigo_postal = form.codigo_postal.data
-                    nuevo_telefono = form.telefono.data
-                    nuevo_email = form.email.data
-                    nuevo_confirmar_email = form.confirmar_email.data
-                    nuevo_contrasena = form.contrasena.data
-                    nuevo_confirmar_contrasena = form.confirmar_contrasena.data
-                    nueva_consulta = form.consulta.data                
-                
-                print('Datos a insertar/actualizar:', nuevo_nombre, nuevo_apellido, nuevo_dni, ...)  # Agrega todos los campos
-
+                else:  # Si no hay un ID, entonces es una inserción 
                 # Insertar datos en la base de datos
-                cursor.execute("""
-                    INSERT INTO usuarios (nombre, apellido, dni, direccion, numero, codigo_postal, telefono, email, confirmar_email, contrasena, confirmar_contrasena, consulta)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (
-                    nuevo_nombre, nuevo_apellido, nuevo_dni, nuevo_direccion, nuevo_numero,
-                    nuevo_codigo_postal, nuevo_telefono, nuevo_email, nuevo_confirmar_email,
-                    nuevo_contrasena, nuevo_confirmar_contrasena, nueva_consulta
+                    cursor.execute("""
+                        INSERT INTO usuarios (nombre, apellido, dni, direccion, numero, codigo_postal, telefono, email, confirmar_email, contrasena, confirmar_contrasena, consulta)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """, (
+                        form.nombre.data, form.apellido.data, form.dni.data, form.direccion.data,
+                        form.numero.data, form.codigo_postal.data, form.telefono.data, form.email.data,
+                        form.confirmar_email.data, form.contrasena.data, form.confirmar_contrasena.data,
+                        form.consulta.data
                 ))
 
                 conexion.commit()
                 flash('Registro exitoso. Nos pondremos en contacto pronto.', 'success')
+                
+                enviar_correo(form.email.data, 'Registro exitoso', 'Gracias por registrarte en nuestro sitio.')
+                
                 return redirect(url_for('formulario'))
 
             except Exception as e:
                 print('Error al procesar el formulario:', e)
+                flash('Error al procesar el formulario. Inténtalo de nuevo más tarde.', 'danger')
                 return 'Error: {}'.format(e)
         else:
             print('Formulario no válido. Errores:', form.errors)
+            flash('Error: Por favor, completa todos los campos correctamente.', 'danger')
             return render_template('formulario.html', form=form)      
-                
+
+# Función para enviar correo electrónico
+def enviar_correo(destinatario, asunto, contenido):
+    message = Message(asunto, sender='pruebacaccomision@gmail.com', recipients=[destinatario])
+    message.body = contenido
+    mail.send(message)
+
+               
 @app.route('/')
 def index():  
     return render_template('index.html')
 
-@app.route('/templates/servicios')
+@app.route('/servicios')
 def servicios():
     return render_template('servicios.html')
 
-@app.route('/templates/contacto')
+@app.route('/contacto')
 def contacto():
     return render_template('formulario.html')
 
-@app.route('/templates/especialidades')
+@app.route('/especialidades')
 def especialidades():
     return render_template('especialidades.html')
 
-@app.route('/templates/equipo')
+@app.route('/equipo')
 def equipo():
     return render_template('equipo.html')
 
@@ -237,5 +230,6 @@ def eliminar(id_usuario):
         conexion.close()       
 
 if __name__ == '__main__':
+    create_form_data_table()
     app.run(debug=True)
 
