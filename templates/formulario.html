@@ -50,54 +50,63 @@
 
   <main>    
     <h2 class="titulo">Formulario de registro</h2>
-    <form id="registration-form" class="form-formulario" method="POST" action="{{ url_for('formulario') }}"
-      {% if usuario and usuario.id %}
-      action="{{ url_for('modificar', id_usuario=usuario.id) }}"
-      {% else %}
-      action="{{ url_for('formulario') }}"
-      {% endif %}
-    >     
+    <form id="registration-form" class="form-formulario" method="POST" action="{{ url_for('formulario') }}">
+
       <input type="hidden" name="id" value="{{ usuario.id if usuario else '' }}">
       
       <label class="label-formulario" for="nombre">Nombre/s:</label>
-      <input class="input-formulario" type="text" id="nombre" name="nombre" required placeholder="Ingrese su nombre/s...">
+      <input class="input-formulario" type="text" id="nombre" name="nombre" required placeholder="Ingrese su nombre/s..." value="{{ usuario.nombre if usuario else '' }}">
       
       <label class="label-formulario" for="apellido">Apellido/s:</label>
-      <input class="input-formulario" type="text" id="apellido" name="apellido" required placeholder="Ingrese su apellido/s...">
+      <input class="input-formulario" type="text" id="apellido" name="apellido" required placeholder="Ingrese su apellido/s..." value="{{ usuario.apellido if usuario else '' }}">
       
       <label class="label-formulario" for="dni">DNI:</label>
-      <input class="input-formulario" type="text" id="dni" name="dni" required placeholder="Ingrese su DNI...">
+      <input class="input-formulario" type="text" id="dni" name="dni" required placeholder="Ingrese su DNI..." value="{{ usuario.dni if usuario else '' }}">
+      
+      <label class="label-formulario" for="fecha-nacimiento">Fecha de Nacimiento:</label>
+      <input class="input-formulario" type="text" id="fecha-nacimiento" name="fecha_nacimiento" required placeholder="Ingrese su fecha de nacimiento..." value="{{ usuario.fecha_nacimiento if usuario else '' }}">
+
       
       <label class="label-formulario" for="direccion">Dirección:</label>
-      <input class="input-formulario" type="text" id="direccion" name="direccion" required placeholder="Ingrese su dirección...">
+      <input class="input-formulario" type="text" id="direccion" name="direccion" required placeholder="Ingrese su dirección..." value="{{ usuario.direccion if usuario else '' }}">
       
       <label class="label-formulario" for="numero">Número:</label>
-      <input class="input-formulario" type="text" id="numero" name="numero" required placeholder="Ingrese el número...">
+      <input class="input-formulario" type="text" id="numero" name="numero" required placeholder="Ingrese el número..." value="{{ usuario.numero if usuario else '' }}">
       
+      <label class="label-formulario" for="localidad">Localidad:</label>
+      <input class="input-formulario" type="text" id="localidad" name="localidad" required placeholder="Ingrese la localidad..." value="{{ usuario.localidad if usuario else '' }}">
+
       <label class="label-formulario" for="codigo-postal">Código Postal:</label>
-      <input class="input-formulario" type="text" id="codigo-postal" name="codigo_postal" required placeholder="Ingrese el código postal...">
+      <input class="input-formulario" type="text" id="codigo-postal" name="codigo_postal" required placeholder="Ingrese el código postal..." value="{{ usuario.codigo_postal if usuario else '' }}">
       
       <label class="label-formulario" for="telefono">Teléfono:</label>
-      <input class="input-formulario" type="text" id="telefono" name="telefono" required placeholder="Ingrese su teléfono...">
+      <input class="input-formulario" type="text" id="telefono" name="telefono" required placeholder="Ingrese su teléfono..." value="{{ usuario.telefono if usuario else '' }}">
       
       <label class="label-formulario" for="email">Email:</label>
-      <input class="input-formulario" type="text" id="email" name="email" required placeholder="Ingrese su mail...">
+      <input class="input-formulario" type="text" id="email" name="email" required placeholder="Ingrese su mail..." value="{{ usuario.email if usuario else '' }}">
       
       <label class="label-formulario" for="confirmar-email">Confirmar Email:</label>
-      <input class="input-formulario" type="text" id="confirmar-email" name="confirmar_email" required placeholder="Confirmar su Email...">
+      <input class="input-formulario" type="text" id="confirmar-email" name="confirmar_email" required placeholder="Confirmar su Email..." value="{{ usuario.confirmar_email if usuario else '' }}">
       
       <label class="label-formulario" for="contrasena">Contraseña:</label>
       <input class="input-formulario" type="password" id="contrasena" name="contrasena" required placeholder="Ingrese su contraseña...">
       
       <label class="label-formulario" for="confirmar-contrasena">Confirmar Contraseña:</label>
-      <input class="input-formulario" type="password" id="confirmar-contrasena" name="confirmar_contrasena" required placeholder="Confirmar su contraseña">
+      <input class="input-formulario" type="password" id="confirmar-contrasena" name="confirmar_contrasena" required placeholder="Confirmar su contraseña...">
       
       <label class="label-formulario" for="textarea">¡Tu consulta o sugerencia nos interesa!:</label>
-      <textarea class="input-formulario" id="textarea" name="consulta" rows="4" placeholder="¡¿Tienes alguna inquietud o comentario?!"></textarea>
+      <textarea class="input-formulario" id="textarea" name="consulta" rows="4" placeholder="¡¿Tienes alguna inquietud o comentario?!">{{ usuario.consulta if usuario else '' }}</textarea>
       
       <button class="button-formulario" id="enviarButton" type="submit">Enviar Formulario</button>
-    </form>
-      
+    </form></br>
+    <div>
+      <h2>Filtrar Usuario</h2></br>
+      <input class="input-formulario" type="text" id="dniUsuario" name="dniUsuario" placeholder="Ingrese DNI">
+      <button class="button-formulario" id="verUsuarioButton" type="button" onclick="verUsuario()">Ver Usuario</button>
+      <button class="button-formulario" id="editarUsuarioButton" type="button" onclick="editarUsuario()">Editar Usuario</button>
+      <button class="button-formulario" id="eliminarUsuarioButton" type="button" onclick="eliminarUsuario()">Eliminar Usuario</button>
+      <button class="button-formulario" id="guardarCambiosButton" type="button" onclick="guardarCambios()">Guardar Cambios</button>
+    </div>
   </main>
   
   <img src="{{ url_for('static', filename='imagenes/envio.png') }}" alt="">

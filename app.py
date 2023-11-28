@@ -1,70 +1,65 @@
-import mysql.connector
-
-from flask import jsonify
-
-
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, Email
 from wtforms import HiddenField
 from flask_mail import Mail, Message
-from flask import flash
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+import secrets
 
 app = Flask(__name__)
 
+app.secret_key = secrets.token_hex(16)
+
 # Configuración de Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Reemplaza con el servidor de correo saliente
-app.config['MAIL_PORT'] = 587  # Puerto del servidor de correo saliente (generalmente 587 o 465)
-app.config['MAIL_USE_TLS'] = True  # Usar TLS para la conexión al servidor de correo
-app.config['MAIL_USERNAME'] = 'pruebacaccomision@gmail.com'  # Reemplaza con tu dirección de correo
-app.config['MAIL_PASSWORD'] = 'pruebacac'  # Reemplaza con tu contraseña de correo
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'pruebacaccomision@gmail.com'
+app.config['MAIL_PASSWORD'] = 'pruebacomision'
+app.config['MAIL_DEFAULT_SENDER'] = 'pruebacaccomision@gmail.com'
 
 mail = Mail(app)
 
-# Configuración de la base de datos. Conexión a la base de datos
-db_config = {
-    'user': 'root',
-    'password': 'root',
-    'host': '127.0.0.1',
-    'database': 'usuariosdb',
-    'port': '3306',
-}
+# Configuración de Flask-Migrate y SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@127.0.0.1/registro_usuarios'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Conexión a la base de datos
-conexion = mysql.connector.connect(**db_config)
-# Crear un cursor para ejecutar consultas SQL
-cursor = conexion.cursor()
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-def create_form_data_table():
-# Crear la tabla si no existe para almacenar los datos
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            nombre VARCHAR(255),
-            apellido VARCHAR(255),
-            dni VARCHAR(15),
-            direccion VARCHAR(255),
-            numero VARCHAR(15),
-            codigo_postal VARCHAR(15),
-            telefono VARCHAR(15),
-            email VARCHAR(255),
-            confirmar_email VARCHAR(255),
-            contrasena VARCHAR(255),
-            confirmar_contrasena VARCHAR(255),
-            consulta TEXT
-        )
-    """)
-    conexion.commit()
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(255), nullable=False)
+    apellido = db.Column(db.String(255), nullable=False)
+    dni = db.Column(db.String(15), nullable=False, unique=True)
+    fecha_nacimiento = db.Column(db.String(15), nullable=False)
+    direccion = db.Column(db.String(255), nullable=False)
+    numero = db.Column(db.String(15), nullable=False)
+    localidad = db.Column(db.String(255), nullable=False)
+    codigo_postal = db.Column(db.String(15), nullable=False)
+    telefono = db.Column(db.String(15), nullable=False)
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    confirmar_email = db.Column(db.String(255), nullable=False)
+    contrasena = db.Column(db.String(255), nullable=False)
+    confirmar_contrasena = db.Column(db.String(255), nullable=False)
+    consulta = db.Column(db.Text)
+
+# Crear la tabla si no existe
+with app.app_context():
+    db.create_all()
 
 # Definir el formulario utilizando Flask-WTF
 class UsuarioForm(FlaskForm):
-    id = HiddenField()  # Agrega un campo oculto para el ID
+    id = HiddenField()
     nombre = StringField('Nombre', validators=[DataRequired()])
     apellido = StringField('Apellido', validators=[DataRequired()])
     dni = StringField('DNI', validators=[DataRequired()])
+    fecha_nacimiento = StringField('Fecha de Nacimiento', validators=[DataRequired()])
     direccion = StringField('Dirección', validators=[DataRequired()])
     numero = StringField('Número', validators=[DataRequired()])
+    localidad = StringField('Localidad', validators=[DataRequired()])
     codigo_postal = StringField('Código Postal', validators=[DataRequired()])
     telefono = StringField('Teléfono', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -73,76 +68,120 @@ class UsuarioForm(FlaskForm):
     confirmar_contrasena = PasswordField('Confirmar Contraseña', validators=[DataRequired()])
     consulta = TextAreaField('Consulta')
 
-# Rutas y funciones flask
-# ... Lógica para mostrar o procesar el formulario ...
-# Presentación del formulario, ;procesamiento de datos 
+def enviar_correo(destinatario, asunto, cuerpo):
+    try:
+        message = Message(asunto, sender=app.config['pruebacaccomision@gmail.com'], recipients=[destinatario])
+        message.body = cuerpo
+        mail.send(message)
+    except Exception as e:
+        print(f"Error al enviar correo: {str(e)}")
+
+# Rutas y funciones Flask
 @app.route('/formulario', methods=['GET', 'POST'])
 def formulario():
     if request.method == 'GET':
-        # obtener la lista de usuarios desde la base de datos y pasarla al template
-        cursor.execute("SELECT id, nombre, apellido FROM usuarios")
-        usuarios = cursor.fetchall()
-        # define 'usuario' as none for the initial render
-        usuario = None
-        return render_template('formulario.html', usuarios=usuarios, usuario=usuario)
-
+        usuarios = Usuario.query.all()
+        return render_template('formulario.html', usuarios=usuarios)
     elif request.method == 'POST':
-        form = UsuarioForm(request.form)
-        if form.validate():
-            print('Formulario válido. Procediendo con la inserción.')
-            try:
-                if form.id.data:  # Si hay un ID en el formulario, entonces es una actualización
-                                    # Actualizar datos en la base de datos
-                    cursor.execute("""
-                        UPDATE usuarios
-                        SET nombre=%s, apellido=%s, dni=%s, direccion=%s, numero=%s,
-                        codigo_postal=%s, telefono=%s, email=%s, confirmar_email=%s,
-                        contrasena=%s, confirmar_contrasena=%s, consulta=%s
-                        WHERE id=%s
-                    """, (
-                        form.nombre.data, form.apellido.data, form.dni.data, form.direccion.data,
-                        form.numero.data, form.codigo_postal.data, form.telefono.data, form.email.data,
-                        form.confirmar_email.data, form.contrasena.data, form.confirmar_contrasena.data,
-                        form.consulta.data, form.id.data
-                    ))
+        data = request.form.to_dict()
+        nuevo_usuario = Usuario(
+            nombre=data['nombre'],
+            apellido=data['apellido'],
+            dni=data['dni'],
+            fecha_nacimiento=data['fecha_nacimiento'],
+            direccion=data['direccion'],
+            numero=data['numero'],
+            localidad=data['localidad'],
+            codigo_postal=data['codigo_postal'],
+            telefono=data['telefono'],
+            email=data['email'],
+            confirmar_email=data['confirmar_email'],
+            contrasena=data['contrasena'],
+            confirmar_contrasena=data['confirmar_contrasena'],
+            consulta=data['consulta']
+        )
+        db.session.add(nuevo_usuario)
+        db.session.commit()
 
-                else:  # Si no hay un ID, entonces es una inserción 
-                # Insertar datos en la base de datos
-                    cursor.execute("""
-                        INSERT INTO usuarios (nombre, apellido, dni, direccion, numero, codigo_postal, telefono, email, confirmar_email, contrasena, confirmar_contrasena, consulta)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """, (
-                        form.nombre.data, form.apellido.data, form.dni.data, form.direccion.data,
-                        form.numero.data, form.codigo_postal.data, form.telefono.data, form.email.data,
-                        form.confirmar_email.data, form.contrasena.data, form.confirmar_contrasena.data,
-                        form.consulta.data
-                ))
+        flash('Registro exitoso. Nos pondremos en contacto a la brevedad.', 'success')
 
-                conexion.commit()
-                flash('Registro exitoso. Nos pondremos en contacto pronto.', 'success')
-                
-                enviar_correo(form.email.data, 'Registro exitoso', 'Gracias por registrarte en nuestro sitio.')
-                
-                return redirect(url_for('formulario'))
+        # Enviar correo electrónico
+        enviar_correo(data['email'], 'Registro exitoso', 'Gracias por registrarte en nuestro sitio.')
 
-            except Exception as e:
-                print('Error al procesar el formulario:', e)
-                flash('Error al procesar el formulario. Inténtalo de nuevo más tarde.', 'danger')
-                return 'Error: {}'.format(e)
-        else:
-            print('Formulario no válido. Errores:', form.errors)
-            flash('Error: Por favor, completa todos los campos correctamente.', 'danger')
-            return render_template('formulario.html', form=form)      
+        return redirect(url_for('formulario'))
 
-# Función para enviar correo electrónico
-def enviar_correo(destinatario, asunto, contenido):
-    message = Message(asunto, sender='pruebacaccomision@gmail.com', recipients=[destinatario])
-    message.body = contenido
-    mail.send(message)
+    return jsonify({'mensaje': 'Registro exitoso. Nos pondremos en contacto pronto.'})
 
-               
+@app.route('/ver_usuario_dni/<string:dni>', methods=['GET'])
+def ver_usuario_dni(dni):
+
+    usuario = Usuario.query.filter_by(dni=dni).first()
+
+    if usuario:
+        usuario_data = {
+            'id': usuario.id,
+            'nombre': usuario.nombre,
+            'apellido': usuario.apellido,
+            'dni': usuario.dni,
+            'fecha_nacimiento': usuario.fecha_nacimiento,
+            'direccion': usuario.direccion,
+            'numero': usuario.numero,
+            'localidad': usuario.localidad,
+            'codigo_postal': usuario.codigo_postal,
+            'telefono': usuario.telefono,
+            'email': usuario.email,
+            'confirmar_email': usuario.confirmar_email,
+            'contrasena': usuario.contrasena,
+            'confirmar_contrasena': usuario.confirmar_contrasena,
+            'consulta': usuario.consulta,
+        }
+        print("Datos del usuario:", usuario_data)
+        return jsonify(usuario_data)
+    else:
+        return jsonify({'mensaje': 'Usuario no encontrado'}), 404
+
+# Ruta para editar un usuario (actualiza el registro en la base de datos)
+@app.route('/modificar_usuario_dni/<string:dni>', methods=['POST'])
+def modificar_usuario_dni(dni):
+    usuario = Usuario.query.filter_by(dni=dni).first()
+
+    if usuario:
+        usuario.nombre = request.form['nombre']
+        usuario.apellido = request.form['apellido']
+        usuario.dni = request.form['dni']
+        usuario.fecha_nacimiento = request.form['fecha_nacimiento']
+        usuario.direccion = request.form['direccion']
+        usuario.numero = request.form['numero']
+        usuario.localidad = request.form['localidad']
+        usuario.codigo_postal = request.form['codigo_postal']
+        usuario.telefono = request.form['telefono']
+        usuario.email = request.form['email']
+        usuario.confirmar_email = request.form['confirmar_email']
+        usuario.contrasena = request.form['contrasena']
+        usuario.confirmar_contrasena = request.form['confirmar_contrasena']
+        
+        db.session.commit()
+
+        return jsonify({'mensaje': 'Cambios guardados correctamente'})
+    else:
+        return jsonify({'mensaje': 'Usuario no encontrado'}), 40
+
+# Ruta para eliminar un usuario
+@app.route('/eliminar_usuario_dni/<string:dni>', methods=['DELETE'])
+def eliminar_usuario_dni(dni):
+    usuario = Usuario.query.filter_by(dni=dni).first()
+
+    if usuario:
+        db.session.delete(usuario)
+        db.session.commit()
+
+        return jsonify({'mensaje': 'Usuario eliminado correctamente.'})
+    else:
+        return jsonify({'mensaje': 'Usuario no encontrado'}), 404
+
+
 @app.route('/')
-def index():  
+def index():
     return render_template('index.html')
 
 @app.route('/servicios')
@@ -161,75 +200,5 @@ def especialidades():
 def equipo():
     return render_template('equipo.html')
 
-@app.route('/modificar/<int:id_usuario>', methods=['GET', 'POST'])
-def modificar(id_usuario):
-    if request.method == 'GET':
-        # Obtener los datos del usuario a modificar
-        cursor.execute("SELECT * FROM usuarios WHERE id=%s", (id_usuario,))
-        usuario = cursor.fetchone()
-        return render_template('formulario.html', usuario=usuario)
-
-    elif request.method == 'POST':
-        try:
-            # Obtener datos del formulario
-            nuevo_nombre = request.form['nombre']
-            nuevo_apellido = request.form['apellido']
-            nuevo_dni = request.form['dni']
-            nuevo_direccion = request.form['direccion']
-            nuevo_numero = request.form['numero']
-            nuevo_codigo_postal = request.form['codigo_postal']
-            nuevo_telefono = request.form['telefono']
-            nuevo_email = request.form['email']
-            nuevo_confirmar_email = request.form['confirmar_email']
-            nuevo_contrasena = request.form['contrasena']
-            nuevo_confirmar_contrasena = request.form['confirmar_contrasena']
-            nueva_consulta = request.form['consulta']
-        
-             # Actualizar datos en la base de datos
-            cursor.execute("""
-                UPDATE usuarios
-                SET nombre=%s, apellido=%s, dni=%s, direccion=%s, numero=%s,
-                codigo_postal=%s, telefono=%s, email=%s, confirmar_email=%s,
-                contrasena=%s, confirmar_contrasena=%s, consulta=%s
-                WHERE id=%s
-            """, (
-                nuevo_nombre, nuevo_apellido, nuevo_dni, nuevo_direccion, nuevo_numero,
-                nuevo_codigo_postal, nuevo_telefono, nuevo_email, nuevo_confirmar_email,
-                nuevo_contrasena, nuevo_confirmar_contrasena, nueva_consulta, id_usuario
-            ))
-            
-            # Confirmar la transacción
-            conexion.commit()
-
-            # Get the updated user data
-            cursor.execute("SELECT * FROM usuarios WHERE id=%s", (id_usuario,))
-            usuario = cursor.fetchone()
-
-            return redirect(url_for('formulario'))
-
-        except Exception as e:
-            return f"Error al modificar datos: {e}"
-        
-        finally:
-            cursor.close()
-            conexion.close()
-        
-@app.route('/eliminar/<int:id_usuario>', methods=['DELETE'])
-def eliminar(id_usuario):
-    try:
-        # Eliminar usuario de la base de datos
-        cursor.execute("DELETE FROM usuarios WHERE id=%s", (id_usuario,))
-        conexion.commit()
-        return jsonify({"message": "Usuario eliminado correctamente"}), 200
-
-    except Exception as e:
-        return jsonify({"error": f"Error al eliminar usuario: {e}"}), 500
-
-    finally:
-        cursor.close()
-        conexion.close()       
-
 if __name__ == '__main__':
-    create_form_data_table()
     app.run(debug=True)
-
