@@ -7,15 +7,12 @@ function validarFormulario() {
   const direccion = document.getElementById("direccion").value;
   const numero = document.getElementById("numero").value;
   const localidad = document.getElementById("localidad").value;
-  const codigoPostal = document.getElementById("codigo-postal").value;
   const telefono = document.getElementById("telefono").value;
   const email = document.getElementById("email").value;
-  const confirmarEmail = document.getElementById("confirmar-email").value;
   const contrasena = document.getElementById("contrasena").value;
-  const confirmarContrasena = document.getElementById("confirmar-contrasena").value;
   const textarea = document.getElementById("textarea").value;
 
-  if (!nombre || !apellido || !dni || !fechaNacimiento || !direccion  || !numero || !localidad || !codigoPostal || !telefono || !email || !confirmarEmail || !contrasena || !confirmarContrasena || !textarea) {
+  if (!nombre || !apellido || !dni || !fechaNacimiento || !direccion  || !numero || !localidad || !telefono || !email || !contrasena || !textarea) {
     return { mensaje: "Por favor, complete todos los campos obligatorios." };
   }
   if (contrasena !== confirmarContrasena || email !== confirmarEmail) {
@@ -26,7 +23,7 @@ function validarFormulario() {
 }
 
 function verUsuario() {
-  const dni = document.getElementById("dniUsuario").value.trim();
+  const dni = document.getElementById("dni").value.trim();
 
   if (dni.trim() === "") {
     alert("Por favor, ingrese un DNI válido.");
@@ -43,54 +40,50 @@ function verUsuario() {
       return response.json();
     })
     .then(data => {
-      actualizarFormularioConDatos(data);
+      cargarDatosEnFormulario(data); // Nueva línea para cargar los datos en el formulario
       alert("Usuario encontrado. Datos pre-cargados en el formulario.");
     })
     .catch(error => {
       console.error("Error al obtener detalles del usuario:", error);
-      alert("Error al obtener detalles del usuario. Usuario no encontrado o se produjo un error.");
+      alert("Error al obtener detalles del usuario. Usuario no encontrado o se produjo un error.");    
     });
 }
 
-function editarUsuario() {
-  const dniUsuario = document.getElementById("dniUsuario").value.trim();
+function cargarDatosEnFormulario(data) {
+  // Actualiza los valores de los campos del formulario con los datos del usuario
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const element = document.getElementById(key);
+      if (element) {
+        element.value = data[key];
+      } else {
+        console.warn(`Elemento con id ${key} no encontrado en el formulario.`);
+      }
+    }
+  }
+}
 
-  if (dniUsuario === "") {
+function editarUsuario() {
+  const dni = document.getElementById("dni").value.trim();
+
+  if (dni === "") {
     alert("Por favor, ingrese un DNI válido.");
     return;
   }
 
-  fetch(`/modificar_usuario_dni/${dniUsuario}`, {
+  fetch(`/modificar_usuario_dni/${dni}`, {
     method: 'POST',
     body: new FormData(document.getElementById("registration-form")),
   })
     .then(response => response.json())
     .then(data => {
       alert(data.mensaje);
-      // Limpia el formulario y el campo DNI
-      limpiarFormulario();
-      limpiarCampoDNI();
+
     })
     .catch(error => {
       console.error("Error al modificar el usuario:", error);
       alert("Error al modificar el usuario. Verifica los datos e intenta nuevamente.");
     });
-}
-
-
-function limpiarFormulario() {
-  // Obtén el formulario y restablece su estado
-  console.log("Limpiando formulario...");
-  const formulario = document.getElementById("registration-form");
-  formulario.reset();
-  console.log("Limpieza exitosa");
-}
-
-function limpiarCampoDNI() {
-  // Limpia el campo DNI
-  console.log("Limpiando campo DNI...");
-  document.getElementById("dniUsuario").value = "";
-  console.log("Limpieza exitosa");
 }
 
 function actualizarFormularioConDatos(data) {
@@ -106,14 +99,14 @@ function actualizarFormularioConDatos(data) {
 }
 
 function eliminarUsuario() {
-  const dniUsuario = document.getElementById("dniUsuario").value.trim();
+  const dni = document.getElementById("dni").value.trim();
 
-  if (dniUsuario === "") {
+  if (dni === "") {
     alert("Por favor, ingrese un DNI válido.");
     return;
   }
 
-  fetch(`/eliminar_usuario_dni/${dniUsuario}`, {
+  fetch(`/eliminar_usuario_dni/${dni}`, {
     method: 'DELETE',
   })
     .then(response => {
@@ -128,34 +121,42 @@ function eliminarUsuario() {
     .catch(error => {
       console.error("Error al eliminar el usuario:", error);
       alert("Error al eliminar el usuario. Verifica los datos e intenta nuevamente.");
+    })
+    .finally(() => {
+      // Reiniciar el formulario a su estado inicial
+      document.getElementById("registration-form").reset();
     });
 }
 
 function guardarCambios() {
-  const dniUsuario = document.getElementById("dniUsuario").value.trim();
+  const dni = document.getElementById("dni").value.trim();
 
-  if (dniUsuario === "") {
-     alert("Por favor, ingrese un DNI válido.");
-     return;
+  if (dni === "") {
+    alert("Por favor, ingrese un DNI válido.");
+    return;
   }
 
-  fetch(`/modificar_usuario_dni/${dniUsuario}`, {
-     method: 'POST',
-     body: new FormData(document.getElementById("registration-form")),
+  fetch(`/modificar_usuario_dni/${dni}`, {
+    method: 'POST',
+    body: new FormData(document.getElementById("registration-form")),
   })
-     .then(response => {
-        if (!response.ok) {
-           throw new Error(`Error al modificar el usuario (${response.status})`);
-        }
-        return response.json();
-     })
-     .then(data => {
-        alert(data.mensaje);
-     })
-     .catch(error => {
-        console.error("Error al modificar el usuario:", error);
-        alert("Error al modificar el usuario. Verifica los datos e intenta nuevamente.");
-     });
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Error al modificar el usuario (${response.status})`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert(data.mensaje);
+    })
+    .catch(error => {
+      console.error("Error al modificar el usuario:", error);
+      alert("Error al modificar el usuario. Verifica los datos e intenta nuevamente.");
+    })
+    .finally(() => {
+      // Reiniciar el formulario a su estado inicial
+      document.getElementById("registration-form").reset();
+    });
 }
 
 
