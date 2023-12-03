@@ -100,7 +100,7 @@ async def formulario():
         # enviar por telegram
         try:
             bot = Bot(token=telegram_bot_token)
-            chat_id = "" 
+            chat_id = "5294223155" 
             message = (
                 "📬 **Nueva Consulta** 📬\n\n"
                 "👤 **Datos del Usuario**:\n"

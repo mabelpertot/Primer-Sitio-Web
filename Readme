@@ -1,0 +1,59 @@
+# Registro de Usuarios con Flask
+
+Este proyecto de aplicación web está construido con Flask y utiliza SQLAlchemy para la gestión de base de datos. La aplicación permite a los usuarios registrarse y enviar consultas, y también integra funcionalidades para enviar notificaciones a través de Telegram cuando se registra un nuevo usuario o se recibe una consulta.
+
+## Funcionalidades
+
+- Registro de nuevos usuarios con información personal.
+- Búsqueda y visualización de información de usuario por DNI.
+- Envío de consultas y registro en la base de datos.
+- Notificación a través de Telegram cuando se registra un nuevo usuario o se recibe una consulta.
+
+## Requisitos del Sistema
+
+- Python 3.x
+- Flask
+- Flask-WTF
+- Flask-Migrate
+- Flask-SQLAlchemy
+- Telegram (para notificaciones)
+
+## Instalación
+
+1. Clona el repositorio:
+
+   ```bash
+   git clone https://github.com/tu-usuario/registro-usuarios-flask.git
+   cd registro-usuarios-flask
+
+   
+2. Instala las dependencias:
+
+bash
+Copy code
+pip install -r requirements.txt
+Configura las variables de entorno:
+
+3. Crea un archivo .env en el directorio del proyecto y agrega las siguientes variables:
+
+env
+Copy code
+FLASK_APP=app.py
+FLASK_ENV=development
+SECRET_KEY=tu_clave_secreta
+TELEGRAM_BOT_TOKEN=tu_token_de_telegram
+Asegúrate de reemplazar tu_clave_secreta y tu_token_de_telegram con valores apropiados.
+
+4. Inicia la aplicación:
+
+bash
+Copy code
+flask run
+La aplicación estará disponible en http://127.0.0.1:5000/.
+
+5. Uso
+Accede a la aplicación a través del navegador web.
+Completa el formulario de registro para agregar un nuevo usuario.
+Utiliza la búsqueda por DNI para visualizar la información de un usuario específico.
+Envía consultas a través del formulario.
+Verifica la consola para mensajes de notificación de Telegram.

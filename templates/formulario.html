@@ -65,7 +65,7 @@
       
       <label class="label-formulario" for="fecha-nacimiento">Fecha de Nacimiento:</label>
       <input class="input-formulario" type="date" id="fecha-nacimiento" name="fecha_nacimiento" required value="{{ usuario.fecha_nacimiento.strftime('%d-%m-%Y') if usuario.fecha_nacimiento else '' }}">
-      
+
       <label class="label-formulario" for="direccion">Dirección:</label>
       <input class="input-formulario" type="text" id="direccion" name="direccion" required placeholder="Ingrese su dirección..." value="{{ usuario.direccion if usuario else '' }}">
       
@@ -94,6 +94,7 @@
     
     </form></br>
   </main>
+  
   <img src="{{ url_for('static', filename='imagenes/envio.png') }}" alt="">
 
   <section class="clientes contenedor">
@@ -120,8 +121,7 @@
   <div class="contenedor-del-iframe">
     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3275.696776748904!2d-58.46642380000004!3d-34.8135698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcd163a82d15e9%3A0x141028019cec648a!2sEduardo%20Arana%20228%2C%20B1842BWF%20Monte%20Grande%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1692651067495!5m2!1ses-419!2sar" width="350" height="150" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div><br> 
-
-  
+ 
   <footer>
     <div class="wave" style="height: 150px; overflow: hidden; position: relative;">
       <div style="position: relative; z-index: 1; background-color: #fff;">
