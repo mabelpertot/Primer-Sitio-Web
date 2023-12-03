@@ -15,16 +15,12 @@ function validarFormulario() {
   if (!nombre || !apellido || !dni || !fechaNacimiento || !direccion  || !numero || !localidad || !telefono || !email || !contrasena || !textarea) {
     return { mensaje: "Por favor, complete todos los campos obligatorios." };
   }
-  if (contrasena !== confirmarContrasena || email !== confirmarEmail) {
-    return { mensaje: "Las contraseñas o los emails no coinciden." };
-  }
 
   return null; // Validación exitosa
 }
 
 function verUsuario() {
   const dni = document.getElementById("dni").value.trim();
-
   if (dni.trim() === "") {
     alert("Por favor, ingrese un DNI válido.");
     return;
@@ -40,7 +36,7 @@ function verUsuario() {
       return response.json();
     })
     .then(data => {
-      cargarDatosEnFormulario(data); // Nueva línea para cargar los datos en el formulario
+      cargarDatosEnFormulario(data); 
       alert("Usuario encontrado. Datos pre-cargados en el formulario.");
     })
     .catch(error => {
