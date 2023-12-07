@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from flask_wtf import FlaskForm
+from flask import flash
 from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, Email
 from wtforms import HiddenField
@@ -29,13 +30,10 @@ class Usuario(db.Model):
     apellido = db.Column(db.String(255), nullable=False)
     dni = db.Column(db.String(15), nullable=False, unique=True)
     fecha_nacimiento = db.Column(db.Date, nullable=False)
-    direccion = db.Column(db.String(255), nullable=False)
-    numero = db.Column(db.String(15), nullable=False)
-    localidad = db.Column(db.String(255), nullable=False)
     telefono = db.Column(db.String(15), nullable=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
     contrasena = db.Column(db.String(255), nullable=False)
-    consulta = db.Column(db.Text)
+    admin = db.Column(db.Boolean, default=False)
 
 # Crear la tabla si no existe
 with app.app_context():
@@ -48,13 +46,9 @@ class UsuarioForm(FlaskForm):
     apellido = StringField('Apellido', validators=[DataRequired()])
     dni = StringField('DNI', validators=[DataRequired()])
     fecha_nacimiento = StringField('Fecha de Nacimiento', validators=[DataRequired()])
-    direccion = StringField('Dirección', validators=[DataRequired()])
-    numero = StringField('Número', validators=[DataRequired()])
-    localidad = StringField('Localidad', validators=[DataRequired()])
     telefono = StringField('Teléfono', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     contrasena = PasswordField('Contraseña', validators=[DataRequired()])
-    consulta = TextAreaField('Consulta')
 
 # Rutas y funciones Flask
 @app.route('/formulario', methods=['GET', 'POST'])
@@ -86,13 +80,9 @@ async def formulario():
             apellido=data['apellido'],
             dni=data['dni'],
             fecha_nacimiento=datetime.strptime('01/01/1990', '%d/%m/%Y'),
-            direccion=data['direccion'],
-            numero=data['numero'],
-            localidad=data['localidad'],
             telefono=data['telefono'],
             email=data['email'],
             contrasena=data['contrasena'],
-            consulta=data['consulta']
         )
         db.session.add(nuevo_usuario)
         db.session.commit()
@@ -121,6 +111,45 @@ async def formulario():
         
         return redirect(url_for('formulario'))
 
+
+@app.route('/btnregistrar', methods=['GET', 'POST'])
+def registrar():
+    if request.method == 'GET':
+        usuario = Usuario.query.all()
+        return render_template('loggedin.html', usuario=usuario)
+    elif request.method == 'POST':
+        data = request.form.to_dict()   
+    
+        # Verifica si se proporciona un DNI para la búsqueda
+        dni_busqueda = data.get('dni-busqueda')
+        if dni_busqueda:
+            usuario = Usuario.query.filter_by(dni=dni_busqueda).first()
+            if usuario:
+                # Si se encuentra el usuario, muestra la información en el formulario
+                return render_template('loggedin.html', usuarios=[usuario])
+            else:
+                # Si no se encuentra el usuario, puedes manejarlo como desees (por ejemplo, mostrar un mensaje)
+                return render_template('loggedin.html', mensaje='Usuario no encontrado')
+            
+        # valida que el DNI del usuario no exista
+        usuario_existente_dni = Usuario.query.filter_by(dni=data['dni']).first()
+        if usuario_existente_dni:
+            return redirect(url_for('loggedin'))
+        
+        nuevo_usuario = Usuario(
+            nombre=data['nombre'],
+            apellido=data['apellido'],
+            dni=data['dni'],
+            fecha_nacimiento=datetime.strptime('01/01/1990', '%d/%m/%Y'),
+            telefono=data['telefono'],
+            email=data['email'],
+            contrasena=data['contrasena'],
+        )
+        db.session.add(nuevo_usuario)
+        db.session.commit()
+
+
+
 @app.route('/ver_usuario_dni/<string:dni>', methods=['GET'])
 def ver_usuario_dni(dni):
 
@@ -136,13 +165,9 @@ def ver_usuario_dni(dni):
             'apellido': usuario.apellido,
             'dni': usuario.dni,
             'fecha_nacimiento': fecha_nacimiento_str,
-            'direccion': usuario.direccion,
-            'numero': usuario.numero,
-            'localidad': usuario.localidad,
             'telefono': usuario.telefono,
             'email': usuario.email,
-            'contrasena': usuario.contrasena,
-            'consulta': usuario.consulta,
+            'contrasena': usuario.contrasena
         }
         
         print("Datos del usuario:", usuario_data)
@@ -159,14 +184,10 @@ def modificar_usuario_dni(dni):
         usuario.apellido = request.form['apellido']
         usuario.dni = request.form['dni']
         usuario.fecha_nacimiento = request.form['fecha_nacimiento']
-        usuario.direccion = request.form['direccion']
-        usuario.numero = request.form['numero']
-        usuario.localidad = request.form['localidad']
         usuario.telefono = request.form['telefono']
         usuario.email = request.form['email']
         usuario.contrasena = request.form['contrasena']
-        usuario.consulta = request.form['consulta']
-        
+
         db.session.commit()
 
         return jsonify({'mensaje': 'Cambios guardados correctamente'})
@@ -195,7 +216,7 @@ def servicios():
 
 @app.route('/contacto')
 def contacto():
-    return render_template('formulario.html')
+    return render_template('loggedin.html')
 
 @app.route('/especialidades')
 def especialidades():
@@ -204,6 +225,68 @@ def especialidades():
 @app.route('/equipo')
 def equipo():
     return render_template('equipo.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # Get the entered username and password from the form
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Check the credentials against the database
+        user = Usuario.query.filter_by(email=username, contrasena=password).first()
+
+        if user:
+            # If the user is found, set the user as logged in
+            session['user_id'] = user.id
+            return redirect(url_for('loggedin'))
+        else:
+            # If the credentials are invalid, show an error message
+            error_message = 'Usuario o contraseña invalida. Por favor intente nuevamente.'
+            return render_template('login.html', error_message=error_message)
+
+    # If it's a GET request, render the login form
+    return render_template('login.html')
+
+# Define a route for the loggedin page
+@app.route('/loggedin')
+def loggedin():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+
+    if user_id:
+        # If logged in, fetch user data and render the loggedin page
+        user = Usuario.query.get(user_id)
+        usuarios = Usuario.query.all()
+        return render_template('loggedin.html', user=user, usuarios=usuarios)
+    else:
+        # If not logged in, redirect to the login page
+        return redirect(url_for('login'))
+
+@app.route('/obtener_formulario_usuario', methods=['GET'])
+def obtener_formulario_usuario():
+    id_usuario = request.args.get('id')
+    usuario = Usuario.query.get(id_usuario)
+    return render_template('usuario_form.html', usuario=usuario)
+
+@app.route('/eliminar_usuario', methods=['POST'])
+def eliminar_usuario():
+    id_usuario = request.form.get('id')
+    usuario = Usuario.query.get(id_usuario)
+    db.session.delete(usuario)
+    db.session.commit()
+    return jsonify({'mensaje': 'Usuario eliminado correctamente.'})
+
+@app.route('/guardar_edicion_usuario', methods=['POST'])
+def guardar_edicion_usuario():
+    id_usuario = request.form.get('id')
+    usuario = Usuario.query.get(id_usuario)
+    # Actualizar los campos del usuario según los datos del formulario
+    usuario.nombre = request.form['nombre']
+    usuario.apellido = request.form['apellido']
+    # Actualiza más campos según sea necesario
+    db.session.commit()
+    return jsonify({'mensaje': 'Edición de usuario guardada correctamente.'})
 
 if __name__ == '__main__':
     app.run(debug=True)

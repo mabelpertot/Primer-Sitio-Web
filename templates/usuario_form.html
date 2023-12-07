@@ -1,0 +1,81 @@
+{% extends 'base/base.html'%}
+{% block title %} Registro de Usuarios {% endblock %}
+ 
+{% block content %}
+  {% from "_macro.html" import render_field %}
+
+  <div class="container text-center">
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <h1 class="mt-4 bold-800">Registros
+          <i class="bi bi-person-plus-fill"></i> 😊
+          <hr>
+        </h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <form method="POST" action="{{ url_for('registro_usuario') }}">
+          {% if Persona == null %}
+            <div class="mb-3">
+              {{ render_field(form.strNombre, class='form-control', maxlength="40" ) }}
+            </div>
+            <div class="mb-3">
+              {{ render_field(form.strApaterno, class='form-control', maxlength="40" ) }}
+            </div>
+            <div class="mb-3">
+              {{ render_field(form.strAmaterno, class='form-control', maxlength="40" ) }}
+            </div>
+            <div class="mb-3">
+              {{ render_field(form.dtefechaNacimiento, class='form-control', type="date" ) }}
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">Sexo</label>
+              <select class="form-control" id="exampleFormControlSelect1" name="idSexo">
+                {% for row in Sexo %}
+                  <option value="{{ row.0 }}">{{ row.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+          {% endif %}
+
+          {% if Persona != null %}
+            {% for row in Persona %}
+              <div class="mb-3">
+                {{ render_field(form.strNombre, class='form-control', value=row.1, maxlength="40") }}
+              </div>
+              <div class="mb-3">
+                {{ render_field(form.strApaterno, class='form-control', value=row.2, maxlength="40" )}}
+              </div>
+              <div class="mb-3">
+                {{ render_field(form.strAmaterno, class='form-control', value=row.3 , maxlength="40" )}}
+              </div>
+              <div class="mb-3">
+                {{ render_field(form.dtefechaNacimiento, class='form-control', type="date", value=row.4 )}}
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Sexo</label>
+                <select class="form-control" id="exampleFormControlSelect1" name="idSexo">
+                  {% if row.5 == 1 %}
+                    <option value="{{ 1 }}">HOMBRE</option>
+                    <option value="{{ 2 }}">MUJER</option>
+                  {% endif %}
+                  {% if row.5 == 2 %}
+                    <option value="{{ 2 }}">MUJER</option>
+                    <option value="{{ 1 }}">HOMBRE</option>
+                  {% endif %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-info">Aceptar</button>
+              <a href="/" class="btn btn-danger">Cancelar</a>
+            {% endfor %}
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+{% endblock %}

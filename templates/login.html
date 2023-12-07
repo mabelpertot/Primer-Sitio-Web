@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <title>Login In- Odontología Integral</title>
+
+  <img src="{{ url_for('static', filename='imagenes/favicon.png') }}" alt="Favicon" style="width: 50px; height: 50px;">
+
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+</head>
+
+<body>
+
+  <header>
+      <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios."class="whatsapp-button">
+        <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp"></a>     
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="item">
+        <div class="text-item">
+          <h2>Bienvenido! <br><span>
+              A nuestro Sitio
+            </span></h2><br>
+            Accede a contenido exclusivo iniciando sesión en tu cuenta. Si aún no tienes una cuenta, puedes <a href="#" class="register-link">registrarte aquí...</a>
+          <div class="social-icon">
+            <a href="#"><i class='bx bxl-facebook'></i></a>
+            <a href="#"><i class='bx bxl-twitter'></i></a>
+            <a href="#"><i class='bx bxl-youtube'></i></a>
+            <a href="#"><i class='bx bxl-instagram'></i></a>
+            <a href="#"><i class='bx bxl-linkedin'></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="login-section">
+        <div class="form-box login">
+          <form action="/login" method="post" class="login-form">
+            <div class="login-section">
+              <button class="back-button" onclick="window.location.href='{{ url_for('index') }}'"></button><!-- Dentro del div con la clase "login-section" -->
+              <div class="login-section">
+                <a href="{{ url_for('index') }}" class="back-button">Regresar</a>
+              </div>
+              
+
+            </div>
+            <h2>Login In</h2>
+            <div class="input-box">
+              <span class="icon"><i class='bx bxs-envelope'></i></span>
+              <input type="text" id="username" name="username" required>
+              <label>Email</label>
+            </div>
+            <div class="input-box">
+              <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+              <input type="password" id="password" name="password" required>
+              <label>Password</label>
+            </div>
+            <div class="remember-password">
+              <label for=""><input type="checkbox">Remember Me</label>
+              <a href="#">Forget Password</a>
+            </div>
+            <button type="submit" class="btn">Login In</button>
+            <div class="create-account">
+              <p>Create A New Account? <a href="#" class="register-link">Sign Up</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

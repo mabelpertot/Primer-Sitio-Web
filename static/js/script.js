@@ -4,101 +4,106 @@ function validarFormulario() {
   const apellido = document.getElementById("apellido").value;
   const dni = document.getElementById("dni").value;
   const fechaNacimiento = document.getElementById("fecha-nacimiento").value;
-  const direccion = document.getElementById("direccion").value;
-  const numero = document.getElementById("numero").value;
-  const localidad = document.getElementById("localidad").value;
   const telefono = document.getElementById("telefono").value;
   const email = document.getElementById("email").value;
-  const contrasena = document.getElementById("contrasena").value;
-  const textarea = document.getElementById("textarea").value;
 
-  if (!nombre || !apellido || !dni || !fechaNacimiento || !direccion  || !numero || !localidad || !telefono || !email || !contrasena || !textarea) {
+  if (!nombre || !apellido || !dni || !fechaNacimiento || !telefono || !email) {
     return { mensaje: "Por favor, complete todos los campos obligatorios." };
   }
 
   return null; // Validación exitosa
 }
 
-function verUsuario() {
-  const dni = document.getElementById("dni").value.trim();
-  if (dni.trim() === "") {
-    alert("Por favor, ingrese un DNI válido.");
-    return;
-  }
 
+function ver(dni) {
   fetch(`/ver_usuario_dni/${dni}`, {
     method: 'GET',
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`Usuario no encontrado (${response.status})`);
+        if (response.status === 404) {
+          throw new Error('Usuario no encontrado.');
+        } else {
+          throw new Error(`Error del servidor (${response.status}).`);
+        }
       }
       return response.json();
     })
     .then(data => {
-      cargarDatosEnFormulario(data); 
-      alert("Usuario encontrado. Datos pre-cargados en el formulario.");
+      // Llama a funciones para mostrar los datos en tu interfaz de usuario
+      mostrarDatosEnPagina(data);
+      alert("Usuario encontrado. Datos mostrados.");
     })
     .catch(error => {
       console.error("Error al obtener detalles del usuario:", error);
-      alert("Error al obtener detalles del usuario. Usuario no encontrado o se produjo un error.");    
+      alert(error.message || "Error al obtener detalles del usuario. Usuario no encontrado o se produjo un error.");
     });
 }
 
-function cargarDatosEnFormulario(data) {
-  // Actualiza los valores de los campos del formulario con los datos del usuario
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      const element = document.getElementById(key);
-      if (element) {
-        element.value = data[key];
-      } else {
-        console.warn(`Elemento con id ${key} no encontrado en el formulario.`);
-      }
-    }
-  }
+function mostrarDatosEnPagina(data) {
+  const datosDiv = document.getElementById("formularioUsuario");
+
+  // Crear una cadena HTML con los datos del usuario
+  const html = `
+    <h3>Datos del Usuario</h3>
+    <p><strong>ID:</strong> ${data.id}</p>
+    <p><strong>Nombre:</strong> ${data.nombre}</p>
+    <p><strong>Apellido:</strong> ${data.apellido}</p>
+    <p><strong>DNI:</strong> ${data.dni}</p>
+    <p><strong>Email:</strong> ${data.email}</p>
+    <p><strong>Teléfono:</strong> ${data.telefono}</p>
+  `;
+  // Actualizar el contenido del div
+  datosDiv.innerHTML = html;
+  console.log(data);
 }
 
-function editarUsuario() {
-  const dni = document.getElementById("dni").value.trim();
-
-  if (dni === "") {
-    alert("Por favor, ingrese un DNI válido.");
-    return;
-  }
-
-  fetch(`/modificar_usuario_dni/${dni}`, {
-    method: 'POST',
-    body: new FormData(document.getElementById("registration-form")),
+function editar(dni) {
+  fetch(`/ver_usuario_dni/${dni}`, {
+    method: 'GET',
   })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Usuario no encontrado.');
+        } else {
+          throw new Error(`Error del servidor (${response.status}).`);
+        }
+      }
+      return response.json();
+    })
     .then(data => {
-      alert(data.mensaje);
-
+      cargarDatosEnPagina(data);
+      habilitarEdicion(data); // Pasar data como parámetro
     })
     .catch(error => {
-      console.error("Error al modificar el usuario:", error);
-      alert("Error al modificar el usuario. Verifica los datos e intenta nuevamente.");
+      console.error("Error al obtener detalles del usuario:", error);
+      alert(error.message || "Error al obtener detalles del usuario. Usuario no encontrado o se produjo un error.");
     });
 }
 
-function actualizarFormularioConDatos(data) {
-  // Actualiza los valores de los campos del formulario con los datos del usuario
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      const element = document.getElementById(key);
-      if (element) {
-        element.value = data[key];
-      }
-    }
-  }
+function cargarDatosEnPagina(data) {
+  const datosDiv = document.getElementById("formularioUsuario");
+
+  // Crear una cadena HTML con los datos del usuario
+  const html = `
+    <h3>Datos del Usuario</h3>
+    <p><strong>ID:</strong> ${data.id}</p>
+    <p><strong>Nombre:</strong> ${data.nombre}</p>
+    <p><strong>Apellido:</strong> ${data.apellido}</p>
+    <p><strong>DNI:</strong> ${data.dni}</p>
+    <p><strong>Email:</strong> ${data.email}</p>
+    <p><strong>Teléfono:</strong> ${data.telefono}</p>
+  `;
+
+  // Actualizar el contenido del div
+  datosDiv.innerHTML = html;
 }
 
-function eliminarUsuario() {
-  const dni = document.getElementById("dni").value.trim();
 
-  if (dni === "") {
-    alert("Por favor, ingrese un DNI válido.");
+function eliminar(dni) {
+  const confirmar = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+  if (!confirmar) {
     return;
   }
 
@@ -107,53 +112,42 @@ function eliminarUsuario() {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`Error al eliminar el usuario (${response.status})`);
+        throw new Error(`Error al eliminar el usuario (${response.status}).`);
       }
       return response.json();
     })
     .then(data => {
       alert(data.mensaje);
+      eliminarUsuarioDePagina(dni);
     })
     .catch(error => {
       console.error("Error al eliminar el usuario:", error);
       alert("Error al eliminar el usuario. Verifica los datos e intenta nuevamente.");
-    })
-    .finally(() => {
-      // Reiniciar el formulario a su estado inicial
-      document.getElementById("registration-form").reset();
     });
 }
 
-function guardarCambios() {
-  const dni = document.getElementById("dni").value.trim();
+function eliminarUsuarioDePagina(dni) {
+  // Encuentra la fila de la tabla con el ID igual al dni del usuario
+  const filaUsuario = document.getElementById(`usuario_${dni}`);
 
-  if (dni === "") {
-    alert("Por favor, ingrese un DNI válido.");
-    return;
+  if (filaUsuario) {
+    // Si se encuentra la fila, elimínala
+    filaUsuario.remove();
+    console.log(`Usuario con DNI ${dni} eliminado de la página`);
+  } else {
+    console.warn(`No se encontró la fila del usuario con DNI ${dni}`);
   }
-
-  fetch(`/modificar_usuario_dni/${dni}`, {
-    method: 'POST',
-    body: new FormData(document.getElementById("registration-form")),
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Error al modificar el usuario (${response.status})`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      alert(data.mensaje);
-    })
-    .catch(error => {
-      console.error("Error al modificar el usuario:", error);
-      alert("Error al modificar el usuario. Verifica los datos e intenta nuevamente.");
-    })
-    .finally(() => {
-      // Reiniciar el formulario a su estado inicial
-      document.getElementById("registration-form").reset();
-    });
 }
+
+const loginsec=document.querySelector('.login-section')
+const loginlink=document.querySelector('.login-link')
+const registerlink=document.querySelector('.register-link')
+registerlink.addEventListener('click',()=>{
+    loginsec.classList.add('active')
+})
+loginlink.addEventListener('click',()=>{
+    loginsec.classList.remove('active')
+})
 
 
 

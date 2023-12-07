@@ -31,6 +31,7 @@
       <a href="{{ url_for('equipo') }}" class="page-box">Equipo</a>
       <a href="{{ url_for('especialidades') }}" class="page-box">Especialidades</a>
       <a href="{{ url_for('formulario') }}" class="page-box">Contacto</a>
+      <a href="{{ url_for('login') }}" class="page-box">LogIn</a>
       <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios."class="whatsapp-button">
         <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp"></a>     
     </nav>
@@ -66,32 +67,16 @@
       <label class="label-formulario" for="fecha-nacimiento">Fecha de Nacimiento:</label>
       <input class="input-formulario" type="date" id="fecha-nacimiento" name="fecha_nacimiento" required value="{{ usuario.fecha_nacimiento.strftime('%d-%m-%Y') if usuario.fecha_nacimiento else '' }}">
 
-      <label class="label-formulario" for="direccion">Dirección:</label>
-      <input class="input-formulario" type="text" id="direccion" name="direccion" required placeholder="Ingrese su dirección..." value="{{ usuario.direccion if usuario else '' }}">
-      
-      <label class="label-formulario" for="numero">Número:</label>
-      <input class="input-formulario" type="text" id="numero" name="numero" required placeholder="Ingrese el número..." value="{{ usuario.numero if usuario else '' }}">
-      
-      <label class="label-formulario" for="localidad">Localidad:</label>
-      <input class="input-formulario" type="text" id="localidad" name="localidad" required placeholder="Ingrese la localidad..." value="{{ usuario.localidad if usuario else '' }}">
-
       <label class="label-formulario" for="telefono">Teléfono:</label>
       <input class="input-formulario" type="text" id="telefono" name="telefono" required placeholder="Ingrese su teléfono..." value="{{ usuario.telefono if usuario else '' }}">
       
       <label class="label-formulario" for="email">Email:</label>
-      <input class="input-formulario" type="text" id="email" name="email" required placeholder="Ingrese su mail..." value="{{ usuario.email if usuario else '' }}">
-      
-      <label class="label-formulario" for="contrasena">Contraseña:</label>
-      <input class="input-formulario" type="password" id="contrasena" name="contrasena" required placeholder="Ingrese su contraseña...">
-      
-      <label class="label-formulario" for="textarea">¡Tu consulta o sugerencia nos interesa!:</label>
-      <textarea class="input-formulario" id="textarea" name="consulta" rows="4" placeholder="¡¿Tienes alguna inquietud o comentario?!">{{ usuario.consulta if usuario else '' }}</textarea>
-      
+      <input class="input-formulario" type="text" id="email" name="email" required placeholder="Ingrese mail..." value="{{ usuario.email if usuario else '' }}">
+
+      <label class="label-formulario" for="email">Password:</label>
+      <input class="input-formulario" type="text" id="password" name="password" required placeholder="Ingrese password..." value="{{ usuario.password if usuario else '' }}">
+
       <button class="button-formulario" id="enviarButton" type="submit">Enviar Formulario</button>
-      <button class="button-formulario" id="verUsuarioButton" type="button" onclick="verUsuario()">Ver Usuario</button>
-      <button class="button-formulario" id="eliminarUsuarioButton" type="button" onclick="eliminarUsuario()">Eliminar Usuario</button>
-      <button class="button-formulario" id="guardarCambiosButton" type="button" onclick="guardarCambios()">Guardar Cambios</button>
-    
     </form></br>
   </main>
   
