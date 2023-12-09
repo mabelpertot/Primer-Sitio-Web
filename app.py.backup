@@ -39,7 +39,7 @@ class Usuario(db.Model):
 with app.app_context():
     db.create_all()
 
-
+# Definir el formulario utilizando Flask-WTF
 class UsuarioForm(FlaskForm):
     id = HiddenField()
     nombre = StringField('Nombre', validators=[DataRequired()])
@@ -78,7 +78,7 @@ async def formulario():
             nombre=data['nombre'],
             apellido=data['apellido'],
             dni=data['dni'],
-            fecha_nacimiento=datetime.strptime('01/01/1990', '%d/%m/%Y'),
+            fecha_nacimiento=datetime.strptime('DD/MM/AAAA', '%d/%m/%Y'),
             email=data['email'],
             contrasena=data['contrasena'],
         )
@@ -155,7 +155,47 @@ def btnregistrar():
 
         return redirect(url_for('btnregistrar'))
 
+@app.route('/ver_usuario_dni/<string:dni>', methods=['GET'])
+def ver_usuario_dni(dni):
 
+    usuario = Usuario.query.filter_by(dni=dni).first()
+
+    if usuario:
+        # Convierte la fecha de nacimiento a un formato de cadena específico
+        fecha_nacimiento_str = usuario.fecha_nacimiento.strftime('%d/%m/%Y') if usuario.fecha_nacimiento else None
+        
+        usuario_data = {
+            'id': usuario.id,
+            'nombre': usuario.nombre,
+            'apellido': usuario.apellido,
+            'dni': usuario.dni,
+            'fecha_nacimiento': fecha_nacimiento_str,
+            'email': usuario.email,
+            'contrasena': usuario.contrasena
+        }
+        
+        print("Datos del usuario:", usuario_data)
+        return jsonify(usuario_data)
+    else:
+        return jsonify({'mensaje': 'Usuario no encontrado'}), 404
+
+@app.route('/modificar_usuario_dni/<string:dni>', methods=['POST'])
+def modificar_usuario_dni(dni):
+    usuario = Usuario.query.filter_by(dni=dni).first()
+
+    if usuario:
+        usuario.nombre = request.form['nombre']
+        usuario.apellido = request.form['apellido']
+        usuario.dni = request.form['dni']
+        usuario.fecha_nacimiento = request.form['fecha_nacimiento']
+        usuario.email = request.form['email']
+        usuario.contrasena = request.form['contrasena']
+
+        db.session.commit()
+
+        return jsonify({'mensaje': 'Cambios guardados correctamente'})
+    else:
+        return jsonify({'mensaje': 'Usuario no encontrado'}), 40
 
 @app.route('/eliminar_usuario_dni/<string:dni>', methods=['DELETE'])
 def eliminar_usuario_dni(dni):
@@ -192,12 +232,15 @@ def equipo():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        # Get the entered username and password from the form
         username = request.form.get('username')
         password = request.form.get('password')
 
+        # Check the credentials against the database
         user = Usuario.query.filter_by(email=username, contrasena=password).first()
 
         if user:
+            # If the user is found, set the user as logged in
             session['user_id'] = user.id
             return redirect(url_for('loggedin'))
             # Redirigir según el rol del usuario
@@ -213,11 +256,14 @@ def login():
     # If it's a GET request, render the login form
     return render_template('login.html')
 
+# Define a route for the loggedin page
 @app.route('/loggedin')
 def loggedin():
+    # Check if the user is logged in
     user_id = session.get('user_id')
 
     if user_id:
+        # If logged in, fetch user data and render the loggedin page
         user = Usuario.query.get(user_id)
         usuarios = Usuario.query.all()
         if user.admin == True:
@@ -226,6 +272,7 @@ def loggedin():
             return render_template('pagina_no_admin.html', mensaje="Página para usuarios no administradores.")
 
     else:
+        # If not logged in, redirect to the login page
         return redirect(url_for('login'))
 
 @app.route('/obtener_formulario_usuario', methods=['GET'])

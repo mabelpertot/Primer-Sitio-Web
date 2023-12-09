@@ -4,26 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <img src="{{ url_for('static', filename='imagenes/favicon.png') }}" alt="Favicon" style="width: 50px; height: 50px;">
-
-    <!--Css-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/fcd9587eb2.js" crossorigin="anonymous"></script>
+    <img src="{{ url_for('static', filename='imagenes/favicon.png') }}" alt="Favicon" style="width: 50px; height: 50px;">
+
 </head>
 <body>
 
 {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class="flashes">
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+    {% if messages %}
+      <ul class="flashes">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 {% endwith %}
+  
 
+<header>
+  <nav>
+    <a href="{{ url_for('index') }}" class="page-box">Institucional</a>
+    <a href="{{ url_for('servicios') }}" class="page-box">Servicios</a>
+    <a href="{{ url_for('equipo') }}" class="page-box">Equipo</a>
+    <a href="{{ url_for('especialidades') }}" class="page-box">Especialidades</a>
+    <a href="{{ url_for('formulario') }}" class="page-box">Contacto</a>
+    <a href="{{ url_for('logout') }}" class="page-box">Cerrar Sesión</a>
+    <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios." class="whatsapp-button">
+      <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp">
+    </a>
+  </nav>
+
+  <section class="textos-header">
+    <h1>Bienvenido Administrator</h1>
+    <h2>{{ mensaje }}</h2>
+  </section>
+  <div class="wave" style="height: 50px; overflow: hidden;">
+    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
+      <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
+        style="stroke: none; fill: #fff;"></path>
+    </svg>
+  </div>
+</header>
+
+<main>
     <div class="container-fluid row">
-        <form class="col-4 p-3" id="registration-form" class="form-formulario" method="POST" action="{{ url_for('formulario') }}" onsubmit="return validarFormulario();">
+        <form class="col-4 p-3 form-formulario" id="registration-form" method="POST" action="{{ url_for('btnregistrar') }}" onsubmit="return validarFormulario();">
             <h3 class="text_center text-secondary">Registro de Usuarios</h3>
             <input type="hidden" name="id" value="{{ usuario.id if usuario else '' }}">
             
@@ -44,16 +71,23 @@
                 <input type="date" class="form-control" name="fecha">
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control" name="correo" required placeholder="Ingrese email..." value="{{ usuario.email if usuario else '' }}">
+                <label for="email" class="form-label">Correo</label>
+                <input type="text" class="form-control" name="correo" required placeholder="Ingrese correo..." value="{{ usuario.email if usuario else '' }}">
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="text" class="form-control" name="password" required placeholder="Ingrese password..." value="{{ usuario.password if usuario else '' }}">
+                <label for="contrasena" class="form-label">Contraseña</label>
+                <input type="text" class="form-control" name="contrasena" required placeholder="Ingrese contraseña..." value="{{ usuario.contrasena if usuario else '' }}">
             </div>
-            <button class="button-formulario" id="enviarButton" type="submit">Registrar</button>
-
+            <div class="mb-3">
+                <label for="admin" class="form-label">Rol</label>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="admin" {{ 'checked' if usuario and usuario.admin else '' }}>
+                    <label class="form-check-label" for="admin">Administrator</label>
+                </div>
+            </div>
+            <button class="button-formulario" id="enviarButton" type="submit">Guardar Datos</button>
         </form>
+    
         <div class="col-8 p-4">
             <table class="table">
                 <thead class="bg-info">
@@ -64,7 +98,7 @@
                         <th scope="col">DNI</th>
                         <th scope="col">FECHA NAC.</th>
                         <th scope="col">CORREO</th>
-                        <th scope="col"><a href="" class="btn btn-sm"><i class="fa-solid fa-user-plus"></i></a></th>
+                        <th scope="col"><a href="#registration-form" class="btn btn-sm"><i class="fa-solid fa-user-plus"></i></a></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,12 +108,11 @@
                         <td>{{ usuario.nombre }}</td>
                         <td>{{ usuario.apellido }}</td>
                         <td>{{ usuario.dni }}</td>
-                        <td>{{ usuario.fecha_nacimiento }}</td>
+                        <td>{{ usuario.fecha_nacimiento.strftime('%Y-%m-%d') }}</td>
                         <td>{{ usuario.email }}</td>
                         <td>
-                            <a href="" class="btn btn-sm btn-primary" onclick="ver('{{ usuario.dni }}')"><i class="fa-solid fa-eye"></i></a>
-                            <a href="" class="btn btn-sm btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a href="" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></a>
+                            <a href="#registration-form" class="btn btn-sm btn-warning" onclick="editarUsuario('{{ usuario.id }}')"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="#registration-form" class="btn btn-sm btn-danger" onclick="eliminarUsuario('{{ usuario.dni }}')"><i class="fa-solid fa-trash"></i></a>
                         </td>
                     </tr>
                     {% else %}
@@ -88,12 +121,13 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-                
             </table>
         </div>
     </div>
-    <!--Css-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</main>
+
+<!-- Js y Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@ function validarFormulario() {
   const nombre = document.getElementById("nombre").value;
   const apellido = document.getElementById("apellido").value;
   const dni = document.getElementById("dni").value;
-  const fechaNacimiento = document.getElementById("fecha-nacimiento").value;
+  const fechaNacimiento = document.getElementById('fecha_nacimiento').value;
   const telefono = document.getElementById("telefono").value;
   const email = document.getElementById("email").value;
 
@@ -14,130 +14,129 @@ function validarFormulario() {
   return null; // Validación exitosa
 }
 
-
-function ver(dni) {
-  fetch(`/ver_usuario_dni/${dni}`, {
-    method: 'GET',
+function editarUsuario(userId) {
+  fetch(`/obtener_formulario_usuario/${userId}`, {
+      method: 'POST', 
   })
-    .then(response => {
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Usuario no encontrado.');
-        } else {
-          throw new Error(`Error del servidor (${response.status}).`);
-        }
-      }
-      return response.json();
-    })
-    .then(data => {
-      // Llama a funciones para mostrar los datos en tu interfaz de usuario
-      mostrarDatosEnPagina(data);
-      alert("Usuario encontrado. Datos mostrados.");
-    })
-    .catch(error => {
-      console.error("Error al obtener detalles del usuario:", error);
-      alert(error.message || "Error al obtener detalles del usuario. Usuario no encontrado o se produjo un error.");
-    });
-}
+      .then(response => {
+          if (response.ok) {
+              return response.json();
+          } else {
+              throw new Error('Usuario no encontrado');
+          }
+      })
+      .then(data => {
+          // Rellenar el formulario con la información obtenida
+          document.getElementById('registration-form').elements['id'].value = data.id;
+          document.getElementById('registration-form').elements['nombre'].value = data.nombre;
+          document.getElementById('registration-form').elements['apellido'].value = data.apellido;
+          document.getElementById('registration-form').elements['dni'].value = data.dni;
+          document.getElementById('registration-form').elements['fecha'].value = data.fecha_nacimiento;
+          document.getElementById('registration-form').elements['correo'].value = data.email;
+          document.getElementById('registration-form').elements['contrasena'].value = data.contrasena;
+          document.getElementById('registration-form').elements['admin'].checked = data.admin;
 
-function mostrarDatosEnPagina(data) {
-  const datosDiv = document.getElementById("formularioUsuario");
+          // Cambiar el texto del botón de enviar para indicar que es una edición
+          document.getElementById('enviarButton').innerText = 'Guardar Cambios';
 
-  // Crear una cadena HTML con los datos del usuario
-  const html = `
-    <h3>Datos del Usuario</h3>
-    <p><strong>ID:</strong> ${data.id}</p>
-    <p><strong>Nombre:</strong> ${data.nombre}</p>
-    <p><strong>Apellido:</strong> ${data.apellido}</p>
-    <p><strong>DNI:</strong> ${data.dni}</p>
-    <p><strong>Email:</strong> ${data.email}</p>
-    <p><strong>Teléfono:</strong> ${data.telefono}</p>
-  `;
-  // Actualizar el contenido del div
-  datosDiv.innerHTML = html;
-  console.log(data);
-}
+          // Crear un elemento de mensaje y agregarlo al formulario
+          const mensajeElement = document.createElement('div');
+          mensajeElement.className = 'alert alert-success';
+          mensajeElement.setAttribute('role', 'alert');
+          mensajeElement.textContent = 'Usuario encontrado. Datos cargados en el formulario.';
 
-function editar(dni) {
-  fetch(`/ver_usuario_dni/${dni}`, {
-    method: 'GET',
-  })
-    .then(response => {
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Usuario no encontrado.');
-        } else {
-          throw new Error(`Error del servidor (${response.status}).`);
-        }
-      }
-      return response.json();
-    })
-    .then(data => {
-      cargarDatosEnPagina(data);
-      habilitarEdicion(data); // Pasar data como parámetro
-    })
-    .catch(error => {
-      console.error("Error al obtener detalles del usuario:", error);
-      alert(error.message || "Error al obtener detalles del usuario. Usuario no encontrado o se produjo un error.");
-    });
-}
+          // Obtener el formulario y agregar el mensaje al principio
+          const formulario = document.getElementById('registration-form');
+          formulario.insertBefore(mensajeElement, formulario.firstChild);
 
-function cargarDatosEnPagina(data) {
-  const datosDiv = document.getElementById("formularioUsuario");
+          // Eliminar el mensaje después de unos segundos
+          setTimeout(() => {
+              formulario.removeChild(mensajeElement);
+          }, 2000);
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          // Crear un elemento de mensaje de error y agregarlo al formulario
+          const mensajeErrorElement = document.createElement('div');
+          mensajeErrorElement.className = 'alert alert-danger';
+          mensajeErrorElement.setAttribute('role', 'alert');
+          mensajeErrorElement.textContent = 'Error al encontrar el usuario.';
 
-  // Crear una cadena HTML con los datos del usuario
-  const html = `
-    <h3>Datos del Usuario</h3>
-    <p><strong>ID:</strong> ${data.id}</p>
-    <p><strong>Nombre:</strong> ${data.nombre}</p>
-    <p><strong>Apellido:</strong> ${data.apellido}</p>
-    <p><strong>DNI:</strong> ${data.dni}</p>
-    <p><strong>Email:</strong> ${data.email}</p>
-    <p><strong>Teléfono:</strong> ${data.telefono}</p>
-  `;
+          // Obtener el formulario y agregar el mensaje de error al principio
+          const formulario = document.getElementById('registration-form');
+          formulario.insertBefore(mensajeErrorElement, formulario.firstChild);
 
-  // Actualizar el contenido del div
-  datosDiv.innerHTML = html;
+          // Eliminar el mensaje después de unos segundos
+          setTimeout(() => {
+              formulario.removeChild(mensajeErrorElement);
+          }, 2000);
+      });
 }
 
 
-function eliminar(dni) {
+function eliminarUsuario(dni) {
   const confirmar = confirm("¿Estás seguro de que deseas eliminar este usuario?");
   if (!confirmar) {
-    return;
+      return;
   }
 
-  fetch(`/eliminar_usuario_dni/${dni}`, {
-    method: 'DELETE',
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Error al eliminar el usuario (${response.status}).`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      alert(data.mensaje);
-      eliminarUsuarioDePagina(dni);
-    })
-    .catch(error => {
-      console.error("Error al eliminar el usuario:", error);
-      alert("Error al eliminar el usuario. Verifica los datos e intenta nuevamente.");
-    });
-}
-
-function eliminarUsuarioDePagina(dni) {
-  // Encuentra la fila de la tabla con el ID igual al dni del usuario
   const filaUsuario = document.getElementById(`usuario_${dni}`);
 
-  if (filaUsuario) {
-    // Si se encuentra la fila, elimínala
-    filaUsuario.remove();
-    console.log(`Usuario con DNI ${dni} eliminado de la página`);
-  } else {
-    console.warn(`No se encontró la fila del usuario con DNI ${dni}`);
-  }
+  fetch(`/eliminar_usuario_dni/${dni}`, {
+      method: 'DELETE',
+  })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`Error al eliminar el usuario (${response.status}).`);
+          }
+          return response.json();
+      })
+      .then(data => {
+          // Crear un elemento de mensaje y agregarlo al formulario
+          const mensajeElement = document.createElement('div');
+          mensajeElement.className = 'alert alert-success';
+          mensajeElement.setAttribute('role', 'alert');
+          mensajeElement.textContent = data.mensaje;
+
+          // Obtener el formulario y agregar el mensaje al principio
+          const formulario = document.getElementById('registration-form');
+          formulario.insertBefore(mensajeElement, formulario.firstChild);
+
+          // Eliminar el mensaje después de unos segundos
+          setTimeout(() => {
+              formulario.removeChild(mensajeElement);
+          }, 2000);
+
+          // Eliminar la fila de la página solo después de que la operación de eliminación de la base de datos tenga éxito
+          if (filaUsuario) {
+              filaUsuario.remove();
+
+              // Forzar una actualización del navegador
+              window.location.reload(true);
+          } else {
+              console.error(`No se encontró la fila del usuario con DNI ${dni}.`);
+          }
+      })
+      .catch(error => {
+          console.error("Error al eliminar el usuario:", error);
+
+          // Crear un elemento de mensaje de error y agregarlo al formulario
+          const mensajeErrorElement = document.createElement('div');
+          mensajeErrorElement.className = 'alert alert-danger';
+          mensajeErrorElement.setAttribute('role', 'alert');
+          mensajeErrorElement.textContent = "Error al eliminar el usuario. Verifica los datos e intenta nuevamente.";
+
+          // Obtener el formulario y agregar el mensaje de error al principio
+          const formulario = document.getElementById('registration-form');
+          formulario.insertBefore(mensajeErrorElement, formulario.firstChild);
+
+          // Eliminar el mensaje después de unos segundos
+          setTimeout(() => {
+              formulario.removeChild(mensajeErrorElement);
+          }, 2000);
+      });
 }
+
 
 const loginsec=document.querySelector('.login-section')
 const loginlink=document.querySelector('.login-link')
@@ -155,27 +154,3 @@ loginlink.addEventListener('click',()=>{
 
  
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-

@@ -7,18 +7,20 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-  <title>Login In- Odontología Integral</title>
 
   <img src="{{ url_for('static', filename='imagenes/favicon.png') }}" alt="Favicon" style="width: 50px; height: 50px;">
 
   <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+
+  <title>Iniciar Sesión - Odontología Integral</title>
 </head>
 
 <body>
 
   <header>
-      <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios."class="whatsapp-button">
-        <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp"></a>     
+    <a href="https://wa.me/5491153030046?text=Hola!%20Quisiera%20saber%20mas%20sobre%20odontología%20Integral.%20Conocer%20sus%20especialidades%20y%20servicios." class="whatsapp-button">
+      <img src="{{ url_for('static', filename='imagenes/whatsapp-port.png') }}" alt="WhatsApp">
+    </a>
   </header>
 
   <main>
@@ -41,15 +43,7 @@
       <div class="login-section">
         <div class="form-box login">
           <form action="/login" method="post" class="login-form">
-            <div class="login-section">
-              <button class="back-button" onclick="window.location.href='{{ url_for('index') }}'"></button><!-- Dentro del div con la clase "login-section" -->
-              <div class="login-section">
-                <a href="{{ url_for('index') }}" class="back-button">Regresar</a>
-              </div>
-              
-
-            </div>
-            <h2>Login In</h2>
+            <h2>Iniciar sesión</h2>
             <div class="input-box">
               <span class="icon"><i class='bx bxs-envelope'></i></span>
               <input type="text" id="username" name="username" required>
@@ -64,9 +58,9 @@
               <label for=""><input type="checkbox">Remember Me</label>
               <a href="#">Forget Password</a>
             </div>
-            <button type="submit" class="btn">Login In</button>
+            <button type="submit" class="btn">Ingresar</button>
             <div class="create-account">
-              <p>Create A New Account? <a href="#" class="register-link">Sign Up</a></p>
+              <p>¿Crea una cuenta nueva? <a href="#" class="register-link">Registrarse</a></p>
             </div>
           </form>
         </div>
