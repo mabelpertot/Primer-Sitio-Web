@@ -39,7 +39,7 @@ class Usuario(db.Model):
 with app.app_context():
     db.create_all()
 
-
+# Definir el formulario utilizando Flask-WTF
 class UsuarioForm(FlaskForm):
     id = HiddenField()
     nombre = StringField('Nombre', validators=[DataRequired()])
@@ -78,7 +78,7 @@ async def formulario():
             nombre=data['nombre'],
             apellido=data['apellido'],
             dni=data['dni'],
-            fecha_nacimiento=datetime.strptime('01/01/1990', '%d/%m/%Y'),
+            fecha_nacimiento=datetime.strptime('01/01/2000', '%d/%m/%Y'),
             email=data['email'],
             contrasena=data['contrasena'],
         )
@@ -156,7 +156,51 @@ def btnregistrar():
         return redirect(url_for('btnregistrar'))
 
 
+  # Ruta para obtener los datos de un usuario por su ID
 
+# Ajustes en editar_usuario
+@app.route('/editar_usuario/<int:id_usuario>', methods=['POST'])
+def editar_usuario(id_usuario):
+    print(f'ID del usuario a editar: {id_usuario}')
+    usuario = Usuario.query.get(id_usuario)
+    
+    if usuario:
+        usuario.nombre = request.form['nombre']
+        usuario.apellido = request.form['apellido']
+        usuario.email = request.form['email']
+        usuario.telefono = request.form['telefono']
+        db.session.commit()
+        return jsonify({'mensaje': 'Edición de usuario guardada correctamente.'})
+    else:
+        return jsonify({'mensaje': 'Usuario no encontrado'}), 404
+
+@app.route('/obtener_formulario_usuario/<int:id_usuario>', methods=['GET'])
+def obtener_formulario_usuario(id_usuario):
+    usuario = Usuario.query.get_or_404(id_usuario)
+    return jsonify({
+        'id': usuario.id,
+        'nombre': usuario.nombre,
+        'apellido': usuario.apellido,
+        'email': usuario.email,
+        'telefono': usuario.telefono
+    })
+
+@app.route('/guardar_cambios_usuario', methods=['POST'])
+def guardar_cambios_usuario():
+    id_usuario = request.form.get('id')
+    usuario = Usuario.query.get(id_usuario)
+    
+    if usuario:
+        # Actualiza los campos del usuario según los datos del formulario
+        usuario.nombre = request.form['nombre']
+        usuario.apellido = request.form['apellido']
+        usuario.email = request.form['email']
+        usuario.telefono = request.form['telefono']
+
+        db.session.commit()
+        return jsonify({'mensaje': 'Edición de usuario guardada correctamente.'})
+    else:
+        return jsonify({'mensaje': 'Usuario no encontrado'}), 404
 @app.route('/eliminar_usuario_dni/<string:dni>', methods=['DELETE'])
 def eliminar_usuario_dni(dni):
     usuario = Usuario.query.filter_by(dni=dni).first()
@@ -226,32 +270,8 @@ def loggedin():
             return render_template('pagina_no_admin.html', mensaje="Página para usuarios no administradores.")
 
     else:
+
         return redirect(url_for('login'))
-
-@app.route('/obtener_formulario_usuario', methods=['GET'])
-def obtener_formulario_usuario():
-    id_usuario = request.args.get('id')
-    usuario = Usuario.query.get(id_usuario)
-    return render_template('usuario_form.html', usuario=usuario)
-
-@app.route('/eliminar_usuario', methods=['POST'])
-def eliminar_usuario():
-    id_usuario = request.form.get('id')
-    usuario = Usuario.query.get(id_usuario)
-    db.session.delete(usuario)
-    db.session.commit()
-    return jsonify({'mensaje': 'Usuario eliminado correctamente.'})
-
-@app.route('/guardar_edicion_usuario', methods=['POST'])
-def guardar_edicion_usuario():
-    id_usuario = request.form.get('id')
-    usuario = Usuario.query.get(id_usuario)
-    # Actualizar los campos del usuario según los datos del formulario
-    usuario.nombre = request.form['nombre']
-    usuario.apellido = request.form['apellido']
-    # Actualiza más campos según sea necesario
-    db.session.commit()
-    return jsonify({'mensaje': 'Edición de usuario guardada correctamente.'})
 
 @app.route('/logout')
 def logout():
