@@ -1,23 +1,21 @@
+
 function validarFormulario() {
-    const nombre = document.getElementById("nombre").value.trim();
-    const apellido = document.getElementById("apellido").value.trim();
-    const dni = document.getElementById("dni").value.trim();
-    const fechaNacimiento = document.getElementById("fecha-nacimiento").value.trim();
-    const telefono = document.getElementById("telefono").value.trim();
-    const email = document.getElementById("email").value.trim();
+  const nombre = document.getElementById("nombre").value;
+  const apellido = document.getElementById("apellido").value;
+  const dni = document.getElementById("dni").value;
+  const fechaNacimiento = document.getElementById("fecha-nacimiento").value;
+  const telefono = document.getElementById("telefono").value;
+  const email = document.getElementById("email").value;
 
-    if (!nombre || !apellido || !dni || !fechaNacimiento || !telefono || !email) {
-        mostrarMensajeError("Por favor, complete todos los campos obligatorios.");
-        return false; // Validación fallida
-    }
+  if (!nombre || !apellido || !dni || !fechaNacimiento || !telefono || !email) {
+    return { mensaje: "Por favor, complete todos los campos obligatorios." };
+  }
 
-    // Validación exitosa, mostrar mensaje de éxito
-    mostrarMensajeExitoso("Formulario validado correctamente.");
-    return true; // Validación exitosa
+  return null; // Validación exitosa
 }
 
-function editarUsuario(idUsuario) {
-    fetch(`/obtener_formulario_usuario/${idUsuario}`, {
+function editarYGuardarCambios(userId) {
+    fetch(`/obtener_formulario_usuario/${userId}`, {
         method: 'GET',
     })
     .then(response => {
@@ -33,21 +31,40 @@ function editarUsuario(idUsuario) {
         document.getElementById('registration-form').elements['apellido'].value = data.apellido;
         document.getElementById('registration-form').elements['email'].value = data.email;
         document.getElementById('registration-form').elements['telefono'].value = data.telefono;
-        
-        // Almacena el ID para usarlo en la subida de cambios
-        document.getElementById('edit-id').value = data.id;
-
+        // Rellenar más campos según sea necesario
+  
         // Cambiar el texto del botón de enviar para indicar que es una edición
         document.getElementById('enviarButton').innerText = 'Guardar Cambios';
-
-        // Muestra el formulario de edición
-        document.getElementById('edit-form').style.display = 'block';
     })
     .catch(error => {
         console.error("Error al obtener el formulario de usuario:", error);
         // Manejar el error, mostrar un mensaje al usuario, etc.
     });
-}
+  }
+  
+  function guardarCambios() {
+    const formData = new FormData(document.getElementById('registration-form'));
+  
+    fetch('/guardar_cambios_usuario', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error al guardar cambios (${response.status}).`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Mostrar mensaje de éxito al usuario, recargar la página, etc.
+        console.log(data.mensaje);
+        window.location.reload(true);
+    })
+    .catch(error => {
+        console.error("Error al guardar cambios:", error);
+        // Manejar el error, mostrar un mensaje al usuario, etc.
+    });
+  }
 
 function eliminarUsuario(dni) {
   const confirmar = confirm("¿Estás seguro de que deseas eliminar este usuario?");
@@ -128,4 +145,3 @@ loginlink.addEventListener('click',()=>{
 
 
  
-  

@@ -177,13 +177,7 @@ def editar_usuario(id_usuario):
 @app.route('/obtener_formulario_usuario/<int:id_usuario>', methods=['GET'])
 def obtener_formulario_usuario(id_usuario):
     usuario = Usuario.query.get_or_404(id_usuario)
-    return jsonify({
-        'id': usuario.id,
-        'nombre': usuario.nombre,
-        'apellido': usuario.apellido,
-        'email': usuario.email,
-        'telefono': usuario.telefono
-    })
+    return render_template('usuario_form.html', usuario=usuario)
 
 @app.route('/guardar_cambios_usuario', methods=['POST'])
 def guardar_cambios_usuario():
@@ -201,6 +195,7 @@ def guardar_cambios_usuario():
         return jsonify({'mensaje': 'Edición de usuario guardada correctamente.'})
     else:
         return jsonify({'mensaje': 'Usuario no encontrado'}), 404
+    
 @app.route('/eliminar_usuario_dni/<string:dni>', methods=['DELETE'])
 def eliminar_usuario_dni(dni):
     usuario = Usuario.query.filter_by(dni=dni).first()
@@ -244,17 +239,13 @@ def login():
         if user:
             session['user_id'] = user.id
             return redirect(url_for('loggedin'))
-            # Redirigir según el rol del usuario
-            # if user.admin:
-            #     return redirect(url_for('loggedin'))
-            # else:
-            #     return redirect(url_for('pagina_no_admin'))
+ 
         else:
-            # If the credentials are invalid, show an error message
+           
             error_message = 'Usuario o contraseña invalida. Por favor intente nuevamente.'
             return render_template('login.html', error_message=error_message)
 
-    # If it's a GET request, render the login form
+    
     return render_template('login.html')
 
 @app.route('/loggedin')

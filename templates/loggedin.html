@@ -37,7 +37,7 @@
   </nav>
 
   <section class="textos-header">
-    <h1>Bienvenido Administrator</h1>
+    <h1>Bienvenido a su Cuenta de Administrador</h1>
     <h2>{{ mensaje }}</h2>
   </section>
   <div class="wave" style="height: 50px; overflow: hidden;">
@@ -111,7 +111,7 @@
                         <td>{{ usuario.fecha_nacimiento.strftime('%Y-%m-%d') }}</td>
                         <td>{{ usuario.email }}</td>
                         <td>
-                            <a href="#registration-form" class="btn btn-sm btn-warning" onclick="editarUsuario('{{ usuario.id }}')"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="#registration-form" class="btn btn-sm btn-warning" data-id="{{ usuario.id }}" onclick="editarUsuario('{{ usuario.id }}')"><i class="fa-solid fa-pen-to-square"></i></a>
                             <a href="#registration-form" class="btn btn-sm btn-danger" onclick="eliminarUsuario('{{ usuario.dni }}')"><i class="fa-solid fa-trash"></i></a>
                         </td>
                     </tr>
