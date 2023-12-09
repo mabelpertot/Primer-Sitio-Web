@@ -110,31 +110,23 @@ async def formulario():
 
 @app.route('/btnregistrar', methods=['GET', 'POST'])
 def btnregistrar():
-    if request.method == 'GET':
-        usuarios = Usuario.query.all()
-        return render_template('loggedin.html', usuarios=usuarios)
-    elif request.method == 'POST':
-        data = request.form.to_dict()   
-    
-        # Verifica si se proporciona un DNI para la búsqueda
+    editando = request.form.get('editando', 'false') == 'true'
+    usuarios = Usuario.query.all()
+
+    if request.method == 'POST':
+        data = request.form.to_dict()
         dni_busqueda = data.get('dni-busqueda')
+
         if dni_busqueda:
             usuario = Usuario.query.filter_by(dni=dni_busqueda).first()
             if usuario:
-                # Si se encuentra el usuario, muestra la información en el formulario
-                return render_template('loggedin.html', usuarios=[usuario])
-            else:
-                # Si no se encuentra el usuario, puedes manejarlo como desees (por ejemplo, mostrar un mensaje)
-                return render_template('loggedin.html', mensaje='Usuario no encontrado')
-            
-        # valida que el DNI del usuario no exista
+                return render_template('loggedin.html', usuarios=[usuario], editando=editando)
+
         usuario_existente_dni = Usuario.query.filter_by(dni=data['dni']).first()
         if usuario_existente_dni:
             return redirect(url_for('btnregistrar'))
-        
-        # Convertir el valor del campo 'admin' a un booleano
+
         admin_value = data.get('admin', 'off') == 'on'
-        
         nuevo_usuario = Usuario(
             nombre=data['nombre'],
             apellido=data['apellido'],
@@ -155,47 +147,65 @@ def btnregistrar():
 
         return redirect(url_for('btnregistrar'))
 
+    return render_template('loggedin.html', usuarios=usuarios, editando=editando)
 
-  # Ruta para obtener los datos de un usuario por su ID
+@app.route('/obtener_usuario/<int:idUsuario>', methods=['GET'])
+def obtener_usuario(idUsuario):
+    usuario = Usuario.query.filter_by(id=idUsuario).first()
 
-# Ajustes en editar_usuario
-@app.route('/editar_usuario/<int:id_usuario>', methods=['POST'])
-def editar_usuario(id_usuario):
-    print(f'ID del usuario a editar: {id_usuario}')
-    usuario = Usuario.query.get(id_usuario)
-    
     if usuario:
-        usuario.nombre = request.form['nombre']
-        usuario.apellido = request.form['apellido']
-        usuario.email = request.form['email']
-        usuario.telefono = request.form['telefono']
+        return jsonify({
+            'id': usuario.id,
+            'nombre': usuario.nombre,
+            'apellido': usuario.apellido,
+            'dni': usuario.dni,
+            'fecha_nacimiento': usuario.fecha_nacimiento.strftime('%Y-%m-%d'),
+            'email': usuario.email,
+            'contrasena': usuario.contrasena,
+            'admin': usuario.admin
+        })
+    else:
+        return jsonify({'error': 'Usuario no encontrado'}), 404
+
+@app.route('/crear_usuario', methods=['POST'])
+def crear_usuario():
+    data = request.form.to_dict()
+    nuevo_usuario = Usuario(
+        nombre=data['nombre'],
+        apellido=data['apellido'],
+        dni=data['dni'],
+        fecha_nacimiento=datetime.strptime(data['fecha'], '%Y-%m-%d'),
+        email=data['correo'],
+        contrasena=data['contrasena'],  # Ajusta según sea necesario
+        admin=data.get('admin', 'off') == 'on',
+    )
+    
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+
+    return jsonify({'mensaje': 'Usuario creado correctamente.'})
+
+
+@app.route('/actualizar_usuario/<int:id>', methods=['POST'])
+def actualizar_usuario(id):
+    data = request.form.to_dict()
+    usuario = Usuario.query.filter_by(id=id).first()
+
+    if usuario:
+        usuario.nombre = data['nombre']
+        usuario.apellido = data['apellido']
+        usuario.dni = data['dni']
+        usuario.fecha_nacimiento = datetime.strptime(data['fecha'], '%Y-%m-%d')
+        usuario.email = data['correo']
+        usuario.admin = data.get('admin', 'off') == 'on'
+
         db.session.commit()
-        return jsonify({'mensaje': 'Edición de usuario guardada correctamente.'})
+
+        return jsonify({'mensaje': 'Usuario actualizado correctamente.'})
     else:
         return jsonify({'mensaje': 'Usuario no encontrado'}), 404
 
-@app.route('/obtener_formulario_usuario/<int:id_usuario>', methods=['GET'])
-def obtener_formulario_usuario(id_usuario):
-    usuario = Usuario.query.get_or_404(id_usuario)
-    return render_template('usuario_form.html', usuario=usuario)
 
-@app.route('/guardar_cambios_usuario', methods=['POST'])
-def guardar_cambios_usuario():
-    id_usuario = request.form.get('id')
-    usuario = Usuario.query.get(id_usuario)
-    
-    if usuario:
-        # Actualiza los campos del usuario según los datos del formulario
-        usuario.nombre = request.form['nombre']
-        usuario.apellido = request.form['apellido']
-        usuario.email = request.form['email']
-        usuario.telefono = request.form['telefono']
-
-        db.session.commit()
-        return jsonify({'mensaje': 'Edición de usuario guardada correctamente.'})
-    else:
-        return jsonify({'mensaje': 'Usuario no encontrado'}), 404
-    
 @app.route('/eliminar_usuario_dni/<string:dni>', methods=['DELETE'])
 def eliminar_usuario_dni(dni):
     usuario = Usuario.query.filter_by(dni=dni).first()

@@ -5,49 +5,81 @@ function validarFormulario() {
     const fechaNacimiento = document.getElementById("fecha-nacimiento").value.trim();
     const telefono = document.getElementById("telefono").value.trim();
     const email = document.getElementById("email").value.trim();
+    const editando = document.getElementById('registration-form').elements['editando'].value;
 
     if (!nombre || !apellido || !dni || !fechaNacimiento || !telefono || !email) {
         mostrarMensajeError("Por favor, complete todos los campos obligatorios.");
         return false; // Validación fallida
     }
+     // Lógica de actualización si estás en modo de edición
+    const url = editando === 'true' ? `/actualizar_usuario/${document.getElementById('edit-id').value}` : '/crear_usuario';
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            nombre: nombre,
+            apellido: apellido,
+            dni: dni,
+            fecha: fechaNacimiento,
+            correo: email,
+            contrasena: 'dummy', // Ajusta según sea necesario
+            admin: document.getElementById('admin').checked,
+        }),
+    })
 
-    // Validación exitosa, mostrar mensaje de éxito
-    mostrarMensajeExitoso("Formulario validado correctamente.");
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error al ${editando === 'true' ? 'actualizar' : 'crear'} el usuario (${response.status}).`);
+        }
+        return response.json();
+    })
+
+    .then(data => {
+        // Resto del código para manejar la respuesta si es necesario
+        console.log(data);
+        mostrarMensajeExitoso(`Usuario ${editando === 'true' ? 'actualizado' : 'creado'} correctamente.`);
+    })
+    .catch(error => {
+        console.error(`Error al ${editando === 'true' ? 'actualizar' : 'crear'} el usuario:`, error);
+        // Resto del código para manejar el error si es necesario
+    });
+
     return true; // Validación exitosa
 }
 
 function editarUsuario(idUsuario) {
-    fetch(`/obtener_formulario_usuario/${idUsuario}`, {
+    fetch(`/obtener_usuario/${idUsuario}`, {
         method: 'GET',
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error(`Error al obtener el formulario de usuario (${response.status}).`);
+            throw new Error(`Error al obtener el usuario (${response.status}).`);
         }
         return response.json();
     })
     .then(data => {
-        // Rellenar el formulario con los datos obtenidos
         document.getElementById('registration-form').elements['id'].value = data.id;
         document.getElementById('registration-form').elements['nombre'].value = data.nombre;
         document.getElementById('registration-form').elements['apellido'].value = data.apellido;
+        document.getElementById('registration-form').elements['dni'].value = data.dni;
+        document.getElementById('registration-form').elements['fecha'].value = data.fecha_nacimiento;
         document.getElementById('registration-form').elements['email'].value = data.email;
-        document.getElementById('registration-form').elements['telefono'].value = data.telefono;
-        
-        // Almacena el ID para usarlo en la subida de cambios
+        document.getElementById('registration-form').elements['contrasena'].value = data.contrasena;
+        document.getElementById('registration-form').elements['admin'].checked = data.admin;
+
         document.getElementById('edit-id').value = data.id;
-
-        // Cambiar el texto del botón de enviar para indicar que es una edición
-        document.getElementById('enviarButton').innerText = 'Guardar Cambios';
-
-        // Muestra el formulario de edición
+        document.getElementById('enviarButton').innerHTML = 'Guardar Cambios';
         document.getElementById('edit-form').style.display = 'block';
     })
     .catch(error => {
-        console.error("Error al obtener el formulario de usuario:", error);
+        console.error("Error al obtener el usuario:", error);
         // Manejar el error, mostrar un mensaje al usuario, etc.
     });
 }
+
 
 function eliminarUsuario(dni) {
   const confirmar = confirm("¿Estás seguro de que deseas eliminar este usuario?");
@@ -113,15 +145,19 @@ function eliminarUsuario(dni) {
 }
 
 
-const loginsec=document.querySelector('.login-section')
-const loginlink=document.querySelector('.login-link')
-const registerlink=document.querySelector('.register-link')
-registerlink.addEventListener('click',()=>{
-    loginsec.classList.add('active')
-})
-loginlink.addEventListener('click',()=>{
-    loginsec.classList.remove('active')
-})
+const loginsec = document.querySelector('.login-section');
+const loginlink = document.querySelector('.login-link');
+const registerlink = document.querySelector('.register-link');
+
+registerlink.addEventListener('click', () => {
+    loginsec.classList.add('active');
+});
+
+loginlink.addEventListener('click', () => {
+    loginsec.classList.remove('active');
+});
+
+
 
 
 
