@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired, Email
 from wtforms import HiddenField
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, date
 import secrets
 from telegram import Bot
 
@@ -122,32 +122,31 @@ def btnregistrar():
             if usuario:
                 return render_template('loggedin.html', usuarios=[usuario], editando=editando)
 
-        usuario_existente_dni = Usuario.query.filter_by(dni=data['dni']).first()
-        if usuario_existente_dni:
-            return redirect(url_for('btnregistrar'))
+        if editando:
+            # Estás en modo de edición, busca y actualiza el usuario existente
+            usuario_id = data.get('id')
+            usuario_existente = Usuario.query.get(usuario_id)
 
-        admin_value = data.get('admin', 'off') == 'on'
-        nuevo_usuario = Usuario(
-            nombre=data['nombre'],
-            apellido=data['apellido'],
-            dni=data['dni'],
-            fecha_nacimiento=datetime.strptime(data['fecha'], '%Y-%m-%d'),
-            email=data['correo'],
-            contrasena=data['contrasena'],
-            admin=admin_value,
-        )
+            if usuario_existente:
+                # Actualiza los datos del usuario existente
+                usuario_existente.nombre = data['nombre']
+                usuario_existente.apellido = data['apellido']
+                usuario_existente.fecha_nacimiento = datetime.strptime(data['fecha'], '%Y-%m-%d')
+                usuario_existente.email = data['correo']
+                usuario_existente.contrasena = data['contrasena']
+                usuario_existente.admin = data.get('admin', 'off') == 'on'
 
-        try:
-            db.session.add(nuevo_usuario)
-            db.session.commit()
-            flash('Usuario registrado correctamente', 'success')
-        except IntegrityError:
-            db.session.rollback()
-            flash('Error: Ya existe un usuario con el mismo DNI', 'error')
+                try:
+                    db.session.commit()
+                    flash('Usuario actualizado correctamente', 'success')
+                except IntegrityError:
+                    db.session.rollback()
+                    flash('Error: Ya existe un usuario con el mismo DNI', 'error')
 
-        return redirect(url_for('btnregistrar'))
+                return redirect(url_for('btnregistrar'))
 
     return render_template('loggedin.html', usuarios=usuarios, editando=editando)
+
 
 @app.route('/obtener_usuario/<int:idUsuario>', methods=['GET'])
 def obtener_usuario(idUsuario):
@@ -263,7 +262,7 @@ def loggedin():
     user_id = session.get('user_id')
 
     if user_id:
-        user = Usuario.query.get(user_id)
+        user = db.session.get(Usuario, user_id)
         usuarios = Usuario.query.all()
         if user.admin == True:
             return render_template('loggedin.html', user=user, usuarios=usuarios)

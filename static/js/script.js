@@ -145,17 +145,22 @@ function eliminarUsuario(dni) {
 }
 
 
-const loginsec = document.querySelector('.login-section');
-const loginlink = document.querySelector('.login-link');
-const registerlink = document.querySelector('.register-link');
+document.addEventListener('DOMContentLoaded', function() {
+    const loginsec = document.querySelector('.login-section');
+    const loginlink = document.querySelector('.login-link');
+    const registerlink = document.querySelector('.register-link');
 
-registerlink.addEventListener('click', () => {
-    loginsec.classList.add('active');
+    console.log(registerlink);  // Verifica si registerlink es null o un elemento
+
+    registerlink.addEventListener('click', () => {
+        loginsec.classList.add('active');
+    });
+
+    loginlink.addEventListener('click', () => {
+        loginsec.classList.remove('active');
+    });
 });
 
-loginlink.addEventListener('click', () => {
-    loginsec.classList.remove('active');
-});
 
 
 

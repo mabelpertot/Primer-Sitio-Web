@@ -56,33 +56,35 @@
             <h3 class="text_center text-secondary">Registro de Usuarios</h3>
             <input type="hidden" name="id" value="{{ usuario.id if usuario else '' }}">
             <input type="hidden" name="editando" value="{{ editando }}">
-
-
-            
+ 
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre/s</label>
-                <input type="text" class="form-control" name="nombre" required placeholder="Ingrese su nombre/s..." value="{{ usuario.nombre if usuario else '' }}">
+                <input type="text" class="form-control" id="nombre" name="nombre" autocomplete="given-name" required placeholder="Ingrese su nombre/s..." value="{{ usuario.nombre if usuario else '' }}">
             </div>
+            
             <div class="mb-3">
                 <label for="apellido" class="form-label">Apellidos/s</label>
-                <input type="text" class="form-control" name="apellido" required placeholder="Ingrese su apellido/s..." value="{{ usuario.apellido if usuario else '' }}">
+                <input type="text" class="form-control" id="apellido" name="apellido" autocomplete="family-name" required placeholder="Ingrese su apellido/s..." value="{{ usuario.apellido if usuario else '' }}">
             </div>
+            
             <div class="mb-3">
                 <label for="dni" class="form-label">DNI</label>
-                <input type="text" class="form-control" name="dni" required placeholder="Ingrese su DNI..." value="{{ usuario.dni if usuario else '' }}">
+                <input type="text" class="form-control" id="dni" name="dni" autocomplete="identification" required placeholder="Ingrese su DNI..." value="{{ usuario.dni if usuario else '' }}">
             </div>
+            
             <div class="mb-3">
-                <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                <input type="date" class="form-control" name="fecha">
+                <label for="fecha" class="form-label">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" id="fecha" name="fecha" autocomplete="bday">
             </div>
+            
             <div class="mb-3">
                 <label for="email" class="form-label">Correo</label>
-                <input type="text" class="form-control" name="correo" required placeholder="Ingrese correo..." value="{{ usuario.email if usuario else '' }}">
+                <input type="text" class="form-control" id="email" name="correo" autocomplete="email" required placeholder="Ingrese correo..." value="{{ usuario.email if usuario else '' }}">
             </div>
             <div class="mb-3">
                 <label for="contrasena" class="form-label">Contraseña</label>
-                <input type="text" class="form-control" name="contrasena" required placeholder="Ingrese contraseña..." value="{{ usuario.contrasena if usuario else '' }}">
-            </div>
+                <input type="text" class="form-control" id="contrasena" name="contrasena" autocomplete="new-password" required placeholder="Ingrese contraseña..." value="{{ usuario.contrasena if usuario else '' }}">
+            </div> 
             <div class="mb-3">
                 <label for="admin" class="form-label">Rol</label>
                 <div class="form-check">
@@ -90,6 +92,7 @@
                     <label class="form-check-label" for="admin">Administrator</label>
                 </div>
             </div>
+            
             <button class="button-formulario" id="enviarButton" type="submit">Guardar Datos</button>
         </form>
     
